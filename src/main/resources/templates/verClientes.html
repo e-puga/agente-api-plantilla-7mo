@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/layout}">
+<head th:replace="layout/layout :: head">
+<title>>Lista Clientes</title>
+</head>
+<body>
+
+	<div class="container-fluid" layout:fragment="page-content">
+
+
+		<div class="container-fluid">
+			<div class="page-header">
+				<h1 class="text-titles">
+					<i class="zmdi zmdi-male-female zmdi-hc-fw"></i> Lista Clientes
+				</h1>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<ul class="nav nav-tabs" style="margin-bottom: 15px;">
+					<li class="active"><a href="#list" data-toggle="tab">Lista
+							Clientes</a></li>
+				</ul>
+
+				<div id="myTabContent" class="tab-content">
+					<div class="tab-pane fade active in" id="list">
+						<div class="table-responsive">
+							<table class="table table-hover text-center">
+								<thead>
+									<tr>
+										<th class="text-center">N°</th>
+										<th class="text-center">Identificación</th>
+										<th class="text-center">Nombres</th>
+										<th class="text-center">Apellidos</th>
+										<th class="text-center">Correo</th>
+										<th class="text-center">Teléfono</th>
+										<th class="text-center">Dirección</th>
+										<th class="text-center">Estado Civil</th>
+										<th class="text-center">Deudas</th>
+										<th class="text-center">Update</th>
+										<th class="text-center">Delete</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="cliente : ${clientes}">
+										<td th:text="${cliente.idCliente}"></td>
+										<td th:text="${cliente.identificacion}"></td>
+										<td th:text="${cliente.nombres}"></td>
+										<td th:text="${cliente.apellidos}"></td>
+										<td th:text="${cliente.correo}"></td>
+										<td th:text="${cliente.telefono}"></td>
+										<td th:text="${cliente.direccion}"></td>
+										<td th:text="${cliente.estadoCivil}"></td>
+										<td><a th:href="'/ver-deudas/' + ${cliente.idCliente}"
+											class="btn btn-primary"> Ver Deudas </a></td>
+										<td><a href="#!"
+											class="btn btn-success btn-raised btn-xs"><i
+												class="zmdi zmdi-refresh"></i></a></td>
+										<td><a href="#!" class="btn btn-danger btn-raised btn-xs"><i
+												class="zmdi zmdi-delete"></i></a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
+

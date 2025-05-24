@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/layout}">
+<head th:replace="layout/layout :: head">
+<title>>Deudas Cliente</title>
+</head>
+<body>
+
+	<div class="container-fluid" layout:fragment="page-content">
+
+		<div class="container-fluid">
+			<div class="page-header">
+				<h1 class="text-titles">
+					<i class="zmdi zmdi-balance zmdi-hc-fw"></i> Deudas Cliente
+				</h1>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<ul class="nav nav-tabs" style="margin-bottom: 15px;">
+					<li class="active"><a href="#list" data-toggle="tab">Deudas
+							Clientes</a></li>
+				</ul>
+
+				<div id="myTabContent" class="tab-content">
+					<div class="tab-pane fade active in" id="list">
+						<div class="table-responsive">
+							<table class="table table-hover text-center">
+								<thead>
+									<tr>
+										<th class="text-center">N°</th>
+										<th class="text-center">Tipo</th>
+										<th class="text-center">Descripción</th>
+										<th class="text-center">Valor Total</th>
+										<th class="text-center">Valor a Pagar</th>
+										<th class="text-center">Total Cuotas</th>
+										<th class="text-center">Pagadas</th>
+										<th class="text-center">Próxima</th>
+										<th class="text-center">Fecha Deuda</th>
+										<th class="text-center">Fecha Máx. Pago</th>
+										<th class="text-center">Estado</th>
+										<th class="text-center">Update</th>
+										<th class="text-center">Delete</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="deuda : ${deudas}">
+										<td th:text="${deuda.idInformacionDeuda}"></td>
+										<td th:text="${deuda.tipoDeuda}"></td>
+										<td th:text="${deuda.descripcion}"></td>
+										<td th:text="${deuda.valorTotal}"></td>
+										<td th:text="${deuda.valorAPagar}"></td>
+										<td th:text="${deuda.totalCuotas}"></td>
+										<td th:text="${deuda.numCuotaPagada}"></td>
+										<td th:text="${deuda.proximaCuota}"></td>
+										<td><span th:if="${deuda.fechaDeuda != null}"
+											th:text="${#temporals.format(deuda.fechaDeuda, 'yyyy-MM-dd HH:mm')}"></span>
+											<span th:if="${deuda.fechaDeuda == null}">Sin fecha</span></td>
+										<td><span th:if="${deuda.fechaMaxPago != null}"
+											th:text="${#temporals.format(deuda.fechaMaxPago, 'yyyy-MM-dd HH:mm')}"></span>
+											<span th:if="${deuda.fechaMaxPago == null}">Sin fecha</span></td>
+										<td th:text="${deuda.estadoDeuda}"></td>
+										<td><a href="#!"
+											class="btn btn-success btn-raised btn-xs"><i
+												class="zmdi zmdi-refresh"></i></a></td>
+										<td><a href="#!" class="btn btn-danger btn-raised btn-xs"><i
+												class="zmdi zmdi-delete"></i></a></td>
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
+

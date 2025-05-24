@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/layout}">
+
+<head th:replace="layout/layout :: head">
+<body>
+
+
+	<div class="container-fluid" layout:fragment="page-content">
+		<div class="page-header">
+			<h1 class="text-titles">
+				Bienvenido <small> a nuestra plataforma web</small>
+			</h1>
+		</div>
+
+		<p class="lead">Utiliza el menú lateral para navegar y administrar
+			clientes y deudas!</p>
+	</div>
+</body>
+</html>
