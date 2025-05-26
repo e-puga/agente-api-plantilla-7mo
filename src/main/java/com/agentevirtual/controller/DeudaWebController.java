@@ -5,11 +5,15 @@ import com.agentevirtual.model.Cliente;
 import com.agentevirtual.model.InformacionDeuda;
 import com.agentevirtual.repository.ClienteRepository;
 import com.agentevirtual.repository.InformacionDeudaRepository;
+import com.agentevirtual.service.ClienteService;
 import com.agentevirtual.service.InformacionDeudaService;
+
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,51 +22,89 @@ import java.util.Optional;
 @Controller
 public class DeudaWebController {
 
-    @Autowired
-    private ClienteRepository clienteRepository;
+	@Autowired
+	private ClienteService _clienteService;
 
-    @Autowired
-    private InformacionDeudaRepository informacionDeudaRepository;
-    
-    @Autowired
-    private InformacionDeudaService informacionDeudaService;
+	@Autowired
+	private InformacionDeudaService _informacionDeudaService;
 
+	@GetMapping("/registro-deuda/{idCliente}")
+	public String mostrarFormularioDeuda(@PathVariable int idCliente, Model model) {
+		Cliente cliente = _clienteService.obtenerClientePorId(idCliente);
+		InformacionDeuda informacionDeuda = new InformacionDeuda();
+		informacionDeuda.setCliente(cliente);
+		model.addAttribute("informacionDeuda", informacionDeuda);
+		return "registroDeuda";
+	}
 
-    @GetMapping("/registro-deuda")
-    public String mostrarFormularioDeuda(Model model) {
-        List<Cliente> clientes = clienteRepository.findAll();
-        model.addAttribute("clientes", clientes);
-        return "registroDeuda";
-    }
-    
-    @GetMapping("/ver-deudas/{idCliente}")
-    public String verDeudasPorCliente(@PathVariable Long idCliente, Model model) {
-    	List<InformacionDeudaDTO> deudas = informacionDeudaService.listarDeudasDTOPorCliente(idCliente);
-        model.addAttribute("deudas", deudas);
-        return "verDeudas";
-    }
+	@GetMapping("/actualiza-deuda/{idInformacionDeuda}")
+	public String actualizarFormularioDeuda(@PathVariable int idInformacionDeuda, Model model) {
+		InformacionDeuda informacionDeuda = _informacionDeudaService.obtenerDeudaPorId(idInformacionDeuda);
+		model.addAttribute("informacionDeuda", informacionDeuda);
+		return "registroDeuda";
+	}
 
+	/*
+	 * @GetMapping("/ver-deudas/{idCliente}") public String
+	 * verDeudasPorCliente(@PathVariable int idCliente, Model model) {
+	 * List<InformacionDeudaDTO> deudas =
+	 * _informacionDeudaService.listarDeudasDTOPorCliente(idCliente);
+	 * model.addAttribute("deudas", deudas); return "verDeudas"; }
+	 */
 
-    @PostMapping("/guardar-deuda")
-    public String guardarDeuda(@RequestParam("identificacionCliente") String identificacion,
-                              @ModelAttribute InformacionDeuda deuda,
-                              Model model) {
+	@GetMapping("/ver-deudas/{idCliente}")
+	public String verDeudasPorCliente(@PathVariable int idCliente, Model model) {
+		try {
+			List<InformacionDeuda> deudas = _informacionDeudaService.listarDeudasPorCliente(idCliente);
+			model.addAttribute("deudas", deudas);
+			return "verDeudas";
+		} catch (Exception e) {
+			e.printStackTrace(); // o usa logger
+			model.addAttribute("error", "Error al consultar las deudas");
+			return "error"; // asegúrate de tener esta vista
+		}
+	}
 
-        Optional<Cliente> clienteOpt = clienteRepository.findByIdentificacion(identificacion);
+	@PostMapping("/guardar-deuda")
+	public String guardarDeuda(@ModelAttribute InformacionDeuda deuda, Model model) {
 
-        if (clienteOpt.isEmpty()) {
-            model.addAttribute("error", "Cliente no encontrado con identificación: " + identificacion);
-            // También envía clientes para el formulario si usas select en otro lugar o para refrescar datos
-            model.addAttribute("clientes", clienteRepository.findAll());
-            return "registroDeuda";
-        }
+		InformacionDeuda respInfoDeuda = _informacionDeudaService.guardarDeuda(deuda);
 
-        deuda.setCliente(clienteOpt.get());
-        deuda.setEsActivo(true);
-        informacionDeudaRepository.save(deuda);
+		if (respInfoDeuda == null) {
+			model.addAttribute("error", "transacción no registrada.");
+			model.addAttribute("informacionDeuda", deuda); // para que se conserve en el reenvío
+			return "registroDeuda";
+		}
 
-        // Redirige o muestra mensaje de éxito según prefieras
-        return "redirect:/registro-deuda";
-    }
+		// Redirige a ver deudas del cliente
+		return "redirect:/ver-deudas/" + deuda.getCliente().getIdCliente();
+	}
+
+	@GetMapping("/editarDeuda/{id}")
+	public String mostrarFormularioEditarDeuda(@PathVariable("id") Integer id,
+			@ModelAttribute InformacionDeuda informacionDeuda, Model model) {
+		informacionDeuda = _informacionDeudaService.obtenerDeudaPorId(id);
+		model.addAttribute("informacionDeuda", informacionDeuda);
+		model.addAttribute("accion", "/editarRegistroDeuda/" + id);
+		return "registroDeuda";
+	}
+
+	@PostMapping("/editarRegistroDeuda/{id}")
+	public String actualizarregistroDeuda(@PathVariable("id") Integer id,
+			@ModelAttribute InformacionDeuda informacionDeuda) {
+		InformacionDeuda respInfoDeuda = _informacionDeudaService.actualizarRegistroDeuda(informacionDeuda);
+
+		if (respInfoDeuda != null) {
+			return "redirect:/ver-deudas/" + respInfoDeuda.getCliente().getIdCliente();
+		}
+		return "redirect:/ver-deudas/" + informacionDeuda.getCliente().getIdCliente();
+	}
+
+	@GetMapping("/eliminarRegistroDeuda/{id}")
+	public String eliminarRegistroDeuda(@PathVariable("id") Integer id) {
+
+		Integer respInfoDeuda = _informacionDeudaService.eliminarRegistroDeuda(id);
+		return "redirect:/ver-deudas/" + respInfoDeuda;
+	}
+
 }
-

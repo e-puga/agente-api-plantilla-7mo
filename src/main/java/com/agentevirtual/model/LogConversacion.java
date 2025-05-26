@@ -14,7 +14,7 @@ public class LogConversacion {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idLogConversacion;
+    private int idLogConversacion;
 
     @Column(length = 16)
     private String identificacion;

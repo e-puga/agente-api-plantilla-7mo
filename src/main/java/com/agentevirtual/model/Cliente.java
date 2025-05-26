@@ -16,7 +16,7 @@ public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCliente;
+    private int idCliente;
 
     @NotBlank(message = "La identificación es obligatoria")
     @Size(min = 10, max = 13, message = "La identificación debe tener entre 10 y 13 caracteres")

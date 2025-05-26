@@ -1,11 +1,13 @@
 package com.agentevirtual.controller;
 
 import com.agentevirtual.model.Cliente;
-import com.agentevirtual.repository.ClienteRepository;
+import com.agentevirtual.service.ClienteService;
 
 import jakarta.validation.Valid;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,41 +16,65 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class ClienteWebController {
 
-    @Autowired
-    private ClienteRepository clienteRepository;
+	@Autowired
+	private ClienteService _clienteService;
 
-    @GetMapping("/registro-cliente")
-    public String mostrarFormularioCliente(Model model) {
-        model.addAttribute("cliente", new Cliente());
-        return "registroCliente";
-    }
+	@GetMapping("/registro-cliente")
+	public String mostrarFormularioCliente(Model model) {
+		model.addAttribute("cliente", new Cliente());
+		return "registroCliente";
+	}
 
-    @PostMapping("/guardar-cliente")
-    public String guardarCliente(
-            @Valid @ModelAttribute("cliente") Cliente cliente,
-            BindingResult bindingResult,
-            Model model) {
+	@PostMapping("/guardar-cliente")
+	public String guardarCliente(@Valid @ModelAttribute("cliente") Cliente cliente, BindingResult result, Model model) {
+		Cliente respCliente = _clienteService.guardarCliente(cliente);
+		
+		if (result.hasErrors()) {
+	        return "registroCliente"; // o la vista donde está tu formulario
+	    }
 
-        // Validaciones básicas
-        if (bindingResult.hasErrors()) {
-            return "registroCliente";
-        }
+		
+		if (cliente == null) {
+			return "registroCliente";
+		}
+		
+		return "redirect:/ver-clientes";
+	}
 
-        // Verificar duplicidad de identificacion
-        if (clienteRepository.findByIdentificacion(cliente.getIdentificacion()).isPresent()) {
-            model.addAttribute("errorIdentificacion", "La identificación ya está registrada.");
-            return "registroCliente";
-        }
+	@GetMapping("/ver-clientes")
+	public String verClientes(Model model) {
+		List<Cliente> respCliente = _clienteService.listarClientes();
+		model.addAttribute("clientes", respCliente);
+		return "verClientes";
+	}
 
-        cliente.setEsActivo(true);
-        clienteRepository.save(cliente);
-        return "redirect:/ver-clientes";
-    }
+	@GetMapping("/editarCliente/{id}")
+	public String mostrarFormularioEditarCliente(@PathVariable("id") Integer id, @ModelAttribute Cliente cliente,
+			Model model) {
+		cliente = _clienteService.obtenerClientePorId(id);
+		model.addAttribute("cliente", cliente);
+		model.addAttribute("accion", "/editarRegistroCliente/" + id);
+		return "registroCliente";
+	}
 
-    @GetMapping("/ver-clientes")
-    public String verClientes(Model model) {
-        model.addAttribute("clientes", clienteRepository.findAll());
-        return "verClientes";
-    }
+	@PostMapping("/editarRegistroCliente/{id}")
+	public String actualizarRegistroCliente(@PathVariable("id") int id, @ModelAttribute Cliente cliente) {
+		Cliente respCliente = _clienteService.actualizarRegistroCliente(cliente);
+
+		if (respCliente != null) {
+			return "redirect:/ver-clientes";
+		}
+		return "rediect:/registro-cliente";
+	}
+
+	@GetMapping("/eliminarRegistroCliente/{id}")
+	public String eliminarRegistroCliente(@PathVariable("id") Integer id) {
+
+		Boolean respCliente = _clienteService.eliminarRegistroCliente(id);
+
+		if (respCliente == true) {
+			return "redirect:/ver-clientes";
+		}
+		return "redirect:/ver-clientes";
+	}
 }
-

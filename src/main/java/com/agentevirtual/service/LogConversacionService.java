@@ -1,9 +1,7 @@
 package com.agentevirtual.service;
 
 import com.agentevirtual.dto.LogConversacionDTO;
-import com.agentevirtual.model.Cliente;
 import com.agentevirtual.model.LogConversacion;
-import com.agentevirtual.repository.ClienteRepository;
 import com.agentevirtual.repository.LogConversacionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,7 +16,6 @@ import java.util.stream.Collectors;
 public class LogConversacionService {
 
     private final LogConversacionRepository logConversacionRepository;
-    private final ClienteRepository clienteRepository;
 
     public LogConversacion registrarConversacion(LogConversacion logConversacion) {
         if (logConversacion.getIdentificacion() == null || logConversacion.getIdentificacion().isBlank()) {

@@ -30,24 +30,26 @@
 							<div class="row">
 								<div class="col-xs-12 col-md-10 col-md-offset-1">
 									<form th:action="@{/guardar-deuda}" method="post"
-										th:object="${cliente}" novalidate>
+										th:object="${informacionDeuda}" novalidate>
 
 										<input type="hidden" th:name="${_csrf.parameterName}"
-											th:value="${_csrf.token}" />
+											th:value="${_csrf.token}" /> <input type="hidden"
+											th:field="*{cliente.idCliente}" /> <input type="hidden"
+											th:field="*{idInformacionDeuda}" />
 
-										<div class="form-group label-floating">
+										<!--  <div class="form-group label-floating">
 											<label class="control-label">Identificación</label> <input
 												type="text" id="identificacionCliente"
 												name="identificacionCliente" class="form-control" required
 												oninput="this.value = this.value.toUpperCase();">
 											<div id="infoCliente" class="form-text text-danger mt-1"></div>
-										</div>
-
+										</div>-->
 
 
 										<div class="form-group label-floating">
 											<label class="control-label">Tipo de Deuda</label> <select
-												name="tipoDeuda" class="form-control" required>
+												th:field="*{tipoDeuda}" name="tipoDeuda"
+												class="form-control" required>
 												<option value="" disabled>-- Selecciona tipo --</option>
 												<option value="CREDITO VEHICULAR">CREDITO VEHICULAR</option>
 												<option value="TAJETA DE CREDITO">TAJETA DE CREDITO</option>
@@ -62,65 +64,68 @@
 
 										<div class="form-group label-floating">
 											<label class="control-label">Descripción</label> <input
-												type="text" name="descripcion" class="form-control" required
+												th:field="*{descripcion}" type="text" name="descripcion"
+												class="form-control" required
 												oninput="this.value = this.value.toUpperCase();">
 										</div>
 
 										<div class="form-group label-floating">
 											<label class="control-label">Valor Total</label> <input
-												type="number" name="valorTotal" class="form-control"
-												step="0.01" required min="0">
+												th:field="*{valorTotal}" type="number" name="valorTotal"
+												class="form-control" step="0.01" required min="0">
 										</div>
 
-										<div class="form-group label-floating">
+										<!--  <div class="form-group label-floating">
 											<label class="control-label">Valor a Pagar</label> <input
-												type="number" name="valorAPagar" class="form-control"
-												step="0.01" required min="0">
-										</div>
+												th:field="*{valorAPagar}" type="number" name="valorAPagar"
+												class="form-control" step="0.01" required min="0">
+										</div>-->
 
 										<div class="form-group label-floating">
 											<label class="control-label">Total Cuotas</label> <input
-												type="number" name="totalCuotas" class="form-control"
-												required min="1" data-solo-numeros>
+												th:field="*{totalCuotas}" type="number" name="totalCuotas"
+												class="form-control" required min="1" data-solo-numeros>
 										</div>
 
 										<div class="form-group label-floating">
 											<label class="control-label">Cuotas Pagadas</label> <input
-												type="number" name="numCuotaPagada" class="form-control"
-												required min="0" data-solo-numeros>
+												th:field="*{numCuotaPagada}" type="number"
+												name="numCuotaPagada" class="form-control" required min="0"
+												data-solo-numeros>
 										</div>
 
-										<div class="form-group label-floating">
+										<!--  <div class="form-group label-floating">
 											<label class="control-label">Próxima Cuota</label> <input
-												type="number" name="proximaCuota" class="form-control"
-												required min="1" data-solo-numeros>
-										</div>
+												th:field="*{proximaCuota}" type="number" name="proximaCuota"
+												class="form-control" required min="1" data-solo-numeros>
+										</div>-->
 
 										<div class="form-group label-floating">
 											<label class="control-label">Fecha de Deuda</label> <input
-												type="datetime-local" name="fechaDeuda" value=""
-												class="form-control" required>
+												th:field="*{fechaDeuda}" type="datetime-local"
+												name="fechaDeuda" value="" class="form-control" required>
 										</div>
 
-										<div class="form-group label-floating">
+										<!--  <div class="form-group label-floating">
 											<label class="control-label">Fecha Máxima de Pago</label> <input
-												type="datetime-local" name="fechaMaxPago" value=""
-												class="form-control" required>
-										</div>
+												th:field="*{fechaMaxPago}" type="datetime-local"
+												name="fechaMaxPago" value="" class="form-control" required>
+										</div>-->
+
 										<div class="form-group label-floating">
 											<label class="control-label">Estado de Deuda</label> <select
-												class="form-control" required name="estadoDeuda">
+												th:field="*{estadoDeuda}" class="form-control" required
+												name="estadoDeuda">
 												<option value="" disabled>-- Selecciona Estado --</option>
-												<option value="ACTIVA">ACTIVA</option>
+												<option value="AL DIA">AL DIA</option>
 												<option value="VENCIDA">VENCIDA</option>
-												<option value="PAGADA">PAGADA</option>
-												<option value="EN MORA">CLIENTE</option>
+												<option value="EN MORA">EN MORA</option>
 												<option value="CONDONADA">CONDONADA</option>
 											</select>
 											<p class="help-block">Selecciona un estado de la deuda</p>
 										</div>
 
-										<input type="hidden" name="esActivo" value="true">
+										<!--  <input type="hidden" name="esActivo" value="true">-->
 
 										<p class="text-center">
 											<button type="submit" class="btn btn-info btn-raised btn-sm">

@@ -40,6 +40,7 @@
 										<th class="text-center">Dirección</th>
 										<th class="text-center">Estado Civil</th>
 										<th class="text-center">Deudas</th>
+										<th class="text-center">Registrar Deuda</th>
 										<th class="text-center">Update</th>
 										<th class="text-center">Delete</th>
 									</tr>
@@ -56,10 +57,16 @@
 										<td th:text="${cliente.estadoCivil}"></td>
 										<td><a th:href="'/ver-deudas/' + ${cliente.idCliente}"
 											class="btn btn-primary"> Ver Deudas </a></td>
-										<td><a href="#!"
+										<td><a
+											th:href="'/registro-deuda/' + ${cliente.idCliente}"
+											class="btn btn-primary"> Registrar Deuda </a></td>
+										<td><a
+											th:href="@{/editarCliente/{id}(id=${cliente.idCliente})}"
 											class="btn btn-success btn-raised btn-xs"><i
 												class="zmdi zmdi-refresh"></i></a></td>
-										<td><a href="#!" class="btn btn-danger btn-raised btn-xs"><i
+										<td><a
+											th:href="@{/eliminarRegistroCliente/{id}(id=${cliente.idCliente})}"
+											class="btn btn-danger btn-raised btn-xs"><i
 												class="zmdi zmdi-delete"></i></a></td>
 									</tr>
 								</tbody>

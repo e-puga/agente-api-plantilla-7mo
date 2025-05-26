@@ -14,49 +14,47 @@ import java.time.LocalDateTime;
 @Table(name = "InformacionDeuda")
 public class InformacionDeuda {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idInformacionDeuda;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int idInformacionDeuda;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "idCliente")
-    private Cliente cliente;
+	@NotNull
+	@ManyToOne
+	@JoinColumn(name = "idCliente")
+	private Cliente cliente;
 
-    @NotBlank
-    @Column(length = 128)
-    private String tipoDeuda;
+	@NotBlank
+	@Column(length = 128)
+	private String tipoDeuda;
 
-    @NotBlank
-    @Column(length = 256)
-    private String descripcion;
+	@NotBlank
+	@Column(length = 256)
+	private String descripcion;
 
-    @NotNull
-    private BigDecimal valorTotal;
+	@NotNull
+	private double valorTotal;
 
-    @NotNull
-    private BigDecimal valorAPagar;
+	@NotNull
+	private double valorAPagar;
 
-    @NotNull
-    private Integer totalCuotas;
+	@NotNull
+	private Integer totalCuotas;
 
-    @NotNull
-    private Integer numCuotaPagada;
+	@NotNull
+	private Integer numCuotaPagada;
 
-    @NotNull
-    private Integer proximaCuota;
+	@NotNull
+	private Integer proximaCuota;
 
-    @NotNull
-    private LocalDateTime fechaDeuda;
+	@NotNull
+	private LocalDateTime fechaDeuda;
 
-    @NotNull
-    private LocalDateTime fechaMaxPago;
+	@NotNull
+	private LocalDateTime fechaMaxPago;
 
-    @NotBlank
-    @Column(length = 64)
-    private String estadoDeuda;
+	@NotBlank
+	@Column(length = 64)
+	private String estadoDeuda;
 
-    private Boolean esActivo;
+	private Boolean esActivo;
 }
-
-

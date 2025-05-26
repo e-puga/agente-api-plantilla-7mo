@@ -12,40 +12,42 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/deudas")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class InformacionDeudaController {
 
-    private final InformacionDeudaService informacionDeudaService;
+	private final InformacionDeudaService _informacionDeudaService;
 
-    @PostMapping("/registro")
-    public ResponseEntity<?> registrarDeuda(@Valid @RequestBody InformacionDeuda deuda) {
-        try {
-            InformacionDeuda nuevaDeuda = informacionDeudaService.registrarDeuda(deuda);
-            return ResponseEntity.ok(nuevaDeuda);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error al registrar la deuda: " + e.getMessage());
-        }
-    }
+	public InformacionDeudaController(InformacionDeudaService informacionDeudaService) {
+		_informacionDeudaService = informacionDeudaService;
+	}
 
-    @GetMapping("/{idCliente}")
-    public ResponseEntity<List<InformacionDeuda>> listarDeudasPorCliente(@PathVariable Long idCliente) {
-        return ResponseEntity.ok(informacionDeudaService.listarDeudasPorCliente(idCliente));
-    }
+	@PostMapping("/registro")
+	public ResponseEntity<?> registrarDeuda(@Valid @RequestBody InformacionDeuda deuda) {
+		try {
+			InformacionDeuda nuevaDeuda = _informacionDeudaService.registrarDeuda(deuda);
+			return ResponseEntity.ok(nuevaDeuda);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body("Error al registrar la deuda: " + e.getMessage());
+		}
+	}
 
-    @GetMapping("/dto/{idCliente}")
-    public ResponseEntity<List<InformacionDeudaDTO>> listarDeudasDTO(@PathVariable Long idCliente) {
-        return ResponseEntity.ok(informacionDeudaService.listarDeudasDTOPorCliente(idCliente));
-    }
-    
-    @GetMapping("/dto/identificacion/{identificacion}")
-    public ResponseEntity<List<InformacionDeudaDTO>> listarDeudasDTOPorIdentificacion(@PathVariable String identificacion) {
-        try {
-            List<InformacionDeudaDTO> deudas = informacionDeudaService.listarDeudasDTOPorIdentificacion(identificacion);
-            return ResponseEntity.ok(deudas);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
+	@GetMapping("/{idCliente}")
+	public ResponseEntity<List<InformacionDeuda>> listarDeudasPorCliente(@PathVariable int idCliente) {
+		return ResponseEntity.ok(_informacionDeudaService.listarDeudasPorCliente(idCliente));
+	}
+
+	@GetMapping("/dto/{idCliente}")
+	public ResponseEntity<List<InformacionDeuda>> listarDeudasDTO(@PathVariable int idCliente) {
+		return ResponseEntity.ok(_informacionDeudaService.listarDeudasPorCliente(idCliente));
+	}
+
+	/*
+	 * @GetMapping("/dto/identificacion/{identificacion}") public
+	 * ResponseEntity<List<InformacionDeudaDTO>>
+	 * listarDeudasDTOPorIdentificacion(@PathVariable String identificacion) { try {
+	 * List<InformacionDeudaDTO> deudas =
+	 * informacionDeudaService.listarDeudasDTOPorIdentificacion(identificacion);
+	 * return ResponseEntity.ok(deudas); } catch (RuntimeException e) { return
+	 * ResponseEntity.badRequest().body(null); } }
+	 */
 }
-
-

@@ -42,6 +42,12 @@
 												class="form-control" pattern="[0-9]{10,13}"
 												title="Debe tener solo números (10 a 13 dígitos)" required>
 										</div>
+										<div th:if="${#fields.hasErrors('identificacion')}"
+											class="text-danger">
+											<p th:errors="*{identificacion}"></p>
+										</div>
+
+
 										<div class="form-group label-floating">
 											<label class="control-label">Nombres</label> <input
 												type="text" th:field="*{nombres}" class="form-control"
