@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -80,28 +81,41 @@ public class InformacionDeudaService {
 
 	public InformacionDeuda guardarDeuda(InformacionDeuda deuda) {
 
-		InformacionDeuda respDeuda = _informacionDeudaRepository.findById(deuda.getIdInformacionDeuda()).orElse(null);
-		double valorapagar = deuda.getValorTotal() / deuda.getTotalCuotas();
+	    InformacionDeuda respDeuda = _informacionDeudaRepository
+	            .findById(deuda.getIdInformacionDeuda())
+	            .orElse(null);
 
-		if (respDeuda == null) {
-			respDeuda = deuda;
-		}
+	    double valorapagar = deuda.getValorTotal() / deuda.getTotalCuotas();
 
-		respDeuda.setTipoDeuda(deuda.getTipoDeuda());
-		respDeuda.setDescripcion(deuda.getDescripcion());
-		respDeuda.setValorTotal(deuda.getValorTotal());
-		respDeuda.setTotalCuotas(deuda.getTotalCuotas());
-		respDeuda.setValorAPagar(valorapagar);
-		respDeuda.setNumCuotaPagada(deuda.getNumCuotaPagada());
-		respDeuda.setProximaCuota(deuda.getNumCuotaPagada() + 1);
-		respDeuda.setFechaDeuda(deuda.getFechaDeuda());
-		respDeuda.setFechaMaxPago(deuda.getFechaDeuda().plusMonths(1));
+	    if (respDeuda == null) {
+	        respDeuda = deuda;
+	    }
 
-		respDeuda.setEstadoDeuda(deuda.getEstadoDeuda());
-		respDeuda.setEsActivo(true);
+	    respDeuda.setTipoDeuda(deuda.getTipoDeuda());
+	    respDeuda.setDescripcion(deuda.getDescripcion());
+	    respDeuda.setValorTotal(deuda.getValorTotal());
+	    respDeuda.setTotalCuotas(deuda.getTotalCuotas());
+	    respDeuda.setValorAPagar(valorapagar);
+	    respDeuda.setNumCuotaPagada(deuda.getNumCuotaPagada());
+	    respDeuda.setProximaCuota(deuda.getNumCuotaPagada() + 1);
 
-		return _informacionDeudaRepository.save(respDeuda);
+	    // ✅ Validar fechaDeuda antes de usar plusMonths
+	    if (deuda.getFechaDeuda() != null) {
+	        respDeuda.setFechaDeuda(deuda.getFechaDeuda());
+	        respDeuda.setFechaMaxPago(deuda.getFechaDeuda().plusMonths(1));
+	    } else {
+	        // Puedes lanzar una excepción si es obligatorio o poner una fecha por defecto
+	        LocalDateTime ahora = LocalDateTime.now();
+	        respDeuda.setFechaDeuda(ahora);
+	        respDeuda.setFechaMaxPago(ahora.plusMonths(1));
+	    }
+
+	    respDeuda.setEstadoDeuda(deuda.getEstadoDeuda());
+	    respDeuda.setEsActivo(true);
+
+	    return _informacionDeudaRepository.save(respDeuda);
 	}
+
 
 	/*
 	 * @Transactional(readOnly = true) public List<InformacionDeudaDTO>

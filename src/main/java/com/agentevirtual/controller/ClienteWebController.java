@@ -49,12 +49,11 @@ public class ClienteWebController {
 	}
 
 	@GetMapping("/editarCliente/{id}")
-	public String mostrarFormularioEditarCliente(@PathVariable("id") Integer id, @ModelAttribute Cliente cliente,
-			Model model) {
-		cliente = _clienteService.obtenerClientePorId(id);
-		model.addAttribute("cliente", cliente);
-		model.addAttribute("accion", "/editarRegistroCliente/" + id);
-		return "registroCliente";
+	public String mostrarFormularioEditarCliente(@PathVariable("id") Integer id, Model model) {
+	    Cliente cliente = _clienteService.obtenerClientePorId(id);
+	    model.addAttribute("cliente", cliente);
+	    model.addAttribute("accion", "/editarRegistroCliente/" + id); // usado por th:action
+	    return "registroCliente";
 	}
 
 	@PostMapping("/editarRegistroCliente/{id}")
@@ -64,7 +63,7 @@ public class ClienteWebController {
 		if (respCliente != null) {
 			return "redirect:/ver-clientes";
 		}
-		return "rediect:/registro-cliente";
+		return "redirect:/registro-cliente";
 	}
 
 	@GetMapping("/eliminarRegistroCliente/{id}")
