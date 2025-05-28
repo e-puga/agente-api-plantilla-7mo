@@ -23,18 +23,28 @@ public class UsuarioService {
 	private final BCryptPasswordEncoder passwordEncoder;
 
 	public Usuario guardarUsuario(Usuario usuario) {
-		// Encriptar contraseña
-		usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-		// Habilitar usuario automáticamente
-		usuario.setEnabled(true);
 
-		// Buscar rol CLIENTE en la base de datos
-		Rol rolCliente = _rolRepository.findByNombre("GESTOR")
-				.orElseThrow(() -> new RuntimeException("Rol CLIENTE no encontrado"));
+		Usuario usuariodb = _usuarioRepository.findById(usuario.getIdUsuario()).orElse(null);
 
-		// Asignar rol CLIENTE al usuario
-		usuario.setRoles(Set.of(rolCliente));
-
+		if (usuariodb == null) {
+			usuario.setEnabled(true);
+			usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+			// Buscar rol CLIENTE en la base de datos
+			Rol rolCliente = _rolRepository.findByNombre("GESTOR")
+					.orElseThrow(() -> new RuntimeException("Rol CLIENTE no encontrado"));
+			// Asignar rol CLIENTE al usuario
+			usuario.setRoles(Set.of(rolCliente));
+			usuariodb = usuario;
+		} else {
+			usuariodb.setUsername(usuario.getUsername());
+			usuariodb.setPassword(usuario.getPassword());
+			usuariodb.setNombre(usuario.getNombre());
+			usuariodb.setApellido(usuario.getApellido());
+			usuariodb.setCelular(usuario.getCelular());
+			usuariodb.setCorreo(usuario.getCorreo());
+			usuariodb.setIdentificacion(usuario.getIdentificacion());
+			usuariodb.setEnabled(usuario.isEnabled());
+		}
 		// Guardar usuario con rol asignado
 		return _usuarioRepository.save(usuario);
 	}
@@ -75,12 +85,16 @@ public class UsuarioService {
 			return "Error: Usuario no encontrado.";
 		}
 
-		String nuevaClave = "123456";
+		String nuevaClave = "12345";
 		String claveEncriptada = passwordEncoder.encode(nuevaClave);
 		usuario.setPassword(claveEncriptada);
 
 		guardarUsuario(usuario);
 
 		return "Contraseña reseteada correctamente a: " + nuevaClave;
+	}
+
+	public List<Rol> listarRoles() {
+		return _rolRepository.findAll();
 	}
 }

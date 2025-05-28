@@ -1,19 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es">
 
 <head>
-<title>LogIn</title>
-<meta charset="UTF-8">
-<meta name="viewport"
-	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<link rel="stylesheet" th:href="@{/css/main.css}">
+	<title>LogIn</title>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+		content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
-<body class="cover"
-	style="background-image: url(/assets/img/loginFont.jpg);">
 
-	<form th:action="@{/login}" method="post" autocomplete="off"
-		class="full-box logInForm">
+<body class="cover" style="background-image: url(/assets/img/loginFont.jpg);">
+
+	<form th:action="@{/login}" method="post" autocomplete="off" class="full-box logInForm">
 		<p class="text-center text-muted">
 			<i class="zmdi zmdi-account-circle zmdi-hc-5x"></i>
 		</p>
@@ -21,24 +19,21 @@
 
 		<!-- Usuario -->
 		<div class="form-group label-floating">
-			<label class="control-label" for="username">Usuario</label> <input
-				class="form-control" id="username" type="text" name="username"
-				required autofocus style="color: white;" />
+			<label class="control-label" for="username">Usuario</label> <input class="form-control" id="username"
+				type="text" name="username" required autofocus style="color: white;" />
 			<p class="help-block">Escribe tu usuario</p>
 		</div>
 
 		<!-- Contraseña -->
 		<div class="form-group label-floating">
-			<label class="control-label" for="password">Contraseña</label> <input
-				class="form-control" id="password" type="password" name="password"
-				required style="color: white;" />
+			<label class="control-label" for="password">Contraseña</label> <input class="form-control" id="password"
+				type="password" name="password" required style="color: white;" />
 			<p class="help-block">Escribe tu contraseña</p>
 		</div>
 
 		<!-- Botón Ingresar -->
 		<div class="form-group text-center">
-			<input type="submit" value="Iniciar sesión"
-				class="btn btn-raised btn-danger" />
+			<input type="submit" value="Iniciar sesión" class="btn btn-raised btn-danger" />
 		</div>
 
 		<!-- Mensajes de error o logout -->
@@ -50,10 +45,10 @@
 		</div>
 
 		<!-- Enlace de registro -->
-		<div class="form-group text-center mt-2">
+		<!--<div class="form-group text-center mt-2">
 			<a th:href="@{/registro}" class="text-muted" style="color: white;">¿No
 				tienes cuenta? Regístrate aquí</a>
-		</div>
+		</div>-->
 
 	</form>
 
@@ -71,4 +66,5 @@
 		$.material.init();
 	</script>
 </body>
+
 </html>

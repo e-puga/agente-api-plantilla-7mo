@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.agentevirtual.model.Cliente;
+import com.agentevirtual.model.Rol;
 import com.agentevirtual.model.Usuario;
 import com.agentevirtual.service.UsuarioService;
 
@@ -54,7 +55,10 @@ public class UsuarioController {
 
 	@GetMapping("/registro-usuario")
 	public String registroUsuario(Model model) {
-		model.addAttribute("usuarios", new Usuario());
+		Usuario usuario = new Usuario();
+		List<Rol> rol = _usuarioService.listarRoles();
+		model.addAttribute("usuarios", usuario);
+		model.addAttribute("listaRoles", rol);
 		return "registroUsuario";
 	}
 
@@ -78,14 +82,13 @@ public class UsuarioController {
 
 	@GetMapping("/reset-password/{id}")
 	public String resetearPasswordUsuario(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
-	    String mensaje = _usuarioService.resetearPassword(id);
+		String mensaje = _usuarioService.resetearPassword(id);
 
-	    if (mensaje.startsWith("Error")) {
-	        redirectAttributes.addFlashAttribute("error", mensaje);
-	    } else {
-	        redirectAttributes.addFlashAttribute("mensaje", mensaje);
-	    }
-
-	    return "redirect:/gestion-usuario";
+		if (mensaje.startsWith("Error")) {
+			redirectAttributes.addFlashAttribute("error", mensaje);
+		} else {
+			redirectAttributes.addFlashAttribute("mensaje", mensaje);
+		}
+		return "redirect:/gestion-usuario";
 	}
 }

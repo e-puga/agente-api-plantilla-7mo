@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
 	layout:decorate="~{layout/layout}">
+
 <head th:replace="layout/layout :: head">
-<title>>Lista Usuarios</title>
+	<title>>Lista Usuarios</title>
 </head>
+
 <body>
 
 	<div class="container-fluid" layout:fragment="page-content">
@@ -31,9 +32,7 @@
 		<div class="row">
 			<div class="col-xs-12">
 
-				<a href="/registro-usuario"
-					class="btn btn-success btn-raised btn-xs"><i
-					class="zmdi zmdi-refresh"></i></a>
+				<a href="/registro-usuario" class="btn btn-success btn-raised btn-xs"><i class="zmdi zmdi-plus"></i></a>
 
 
 
@@ -73,18 +72,16 @@
 										<td th:text="${usuario.correo}"></td>
 										<td th:text="${usuario.celular}"></td>
 										<td th:text="${usuario.enabled}"></td>
-										<!--  <td th:text="${usuario.rol.nombre}"></td>-->
+										<td>ADMIN</td>
 
 
-										<td><a
-											th:href="@{/reset-password/{id}(id=${usuario.idUsuario})}"
-											class="btn btn-primary btn-xs"
-											onclick="return confirm('¿Está seguro de que desea resetear la contraseña?');">
+										<td><a th:href="@{/reset-password/{id}(id=${usuario.idUsuario})}"
+												class="btn btn-primary"
+												onclick="return confirm('¿Está seguro de que desea resetear la contraseña?');">
 												Resetear Password </a></td>
-										<td><a
-											th:href="@{/editar-usuario/{id}(id=${usuario.idUsuario})}"
-											class="btn btn-success btn-raised btn-xs"><i
-												class="zmdi zmdi-refresh"></i></a></td>
+										<td><a th:href="@{/editar-usuario/{id}(id=${usuario.idUsuario})}"
+												class="btn btn-success btn-raised btn-xs"><i
+													class="zmdi zmdi-refresh"></i></a></td>
 									</tr>
 								</tbody>
 							</table>
@@ -96,5 +93,5 @@
 	</div>
 
 </body>
-</html>
 
+</html>
