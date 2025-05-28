@@ -13,20 +13,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Entity
-@Table(name = "roles")
+@Table(name = "Rol")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Rol {
-	
-	 @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private int id;
 
-	    @Column(unique = true, nullable = false)
-	    private String nombre;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int idRol;
+
+	@Column(unique = true, nullable = false, name = "nombre")
+	private String nombre;
+
+	@Column(name = "descripcion")
+	private String descripcion;
 
 }

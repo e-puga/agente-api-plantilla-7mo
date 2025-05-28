@@ -41,13 +41,14 @@ public class InformacionDeudaController {
 		return ResponseEntity.ok(_informacionDeudaService.listarDeudasPorCliente(idCliente));
 	}
 
-	/*
-	 * @GetMapping("/dto/identificacion/{identificacion}") public
-	 * ResponseEntity<List<InformacionDeudaDTO>>
-	 * listarDeudasDTOPorIdentificacion(@PathVariable String identificacion) { try {
-	 * List<InformacionDeudaDTO> deudas =
-	 * informacionDeudaService.listarDeudasDTOPorIdentificacion(identificacion);
-	 * return ResponseEntity.ok(deudas); } catch (RuntimeException e) { return
-	 * ResponseEntity.badRequest().body(null); } }
-	 */
+	@GetMapping("/dto/identificacion/{identificacion}")
+	public ResponseEntity<List<InformacionDeuda>> listarDeudasPorIdentificacion(@PathVariable String identificacion) {
+		try {
+			List<InformacionDeuda> deudas = _informacionDeudaService.listarDeudasPorIdentificacion(identificacion);
+			return ResponseEntity.ok(deudas);
+		} catch (RuntimeException e) {
+			return ResponseEntity.badRequest().body(null);
+		}
+	}
+
 }

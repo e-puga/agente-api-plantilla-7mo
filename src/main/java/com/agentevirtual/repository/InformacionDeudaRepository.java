@@ -14,6 +14,8 @@ import java.util.List;
 @Repository
 public interface InformacionDeudaRepository extends JpaRepository<InformacionDeuda, Integer> {
 	List<InformacionDeuda> findByCliente_IdCliente(int idCliente);
+	
+
 
 	/*
 	 * @Query("SELECT new com.agentevirtual.dto.InformacionDeudaDTO(d.idInformacionDeuda, d.tipoDeuda, d.descripcion, d.valorTotal, d.valorAPagar, d.totalCuotas, d.numCuotaPagada, d.proximaCuota, d.fechaDeuda, d.fechaMaxPago, d.estadoDeuda, d.esActivo) "
@@ -35,4 +37,5 @@ public interface InformacionDeudaRepository extends JpaRepository<InformacionDeu
 	 * List<InformacionDeudaDTO> buscarDeudasPorIdCliente(@Param("idCliente") int
 	 * idCliente);
 	 */
+
 }

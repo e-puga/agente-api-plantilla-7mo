@@ -26,6 +26,7 @@ public class ClienteService {
 
 	public Cliente registrarCliente(Cliente cliente) {
 		Optional<Cliente> existente = _clienteRepository.findByIdentificacion(cliente.getIdentificacion());
+
 		if (existente.isPresent()) {
 			throw new RuntimeException("Ya existe un cliente con esa identificación.");
 		}

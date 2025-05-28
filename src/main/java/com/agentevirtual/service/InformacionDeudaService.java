@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 //@RequiredArgsConstructor
@@ -24,6 +25,9 @@ public class InformacionDeudaService {
 
 	@Autowired
 	private InformacionDeudaRepository _informacionDeudaRepository;
+
+	@Autowired
+	private ClienteRepository _clienteRepository;
 
 	/*
 	 * @Autowired private ClienteRepository _clienteRepository;
@@ -38,10 +42,14 @@ public class InformacionDeudaService {
 		return _informacionDeudaRepository.findByCliente_IdCliente(idCliente);
 	}
 
-	/*
-	 * public List<InformacionDeudaDTO> listarDeudasDTOPorCliente(int idCliente) {
-	 * return _informacionDeudaRepository.buscarDeudasPorIdCliente(idCliente); }
-	 */
+	public List<InformacionDeuda> listarDeudasPorIdentificacion(String identificacion) {
+		Cliente cliente = _clienteRepository.findByIdentificacion(identificacion).orElse(null);
+
+		if (cliente == null) {
+			throw new RuntimeException("Cliente no existe.");
+		}
+		return _informacionDeudaRepository.findByCliente_IdCliente(cliente.getIdCliente());
+	}
 
 	public InformacionDeuda obtenerDeudaPorId(int id) {
 		return _informacionDeudaRepository.findById(id).orElse(null);
@@ -81,41 +89,38 @@ public class InformacionDeudaService {
 
 	public InformacionDeuda guardarDeuda(InformacionDeuda deuda) {
 
-	    InformacionDeuda respDeuda = _informacionDeudaRepository
-	            .findById(deuda.getIdInformacionDeuda())
-	            .orElse(null);
+		InformacionDeuda respDeuda = _informacionDeudaRepository.findById(deuda.getIdInformacionDeuda()).orElse(null);
 
-	    double valorapagar = deuda.getValorTotal() / deuda.getTotalCuotas();
+		double valorapagar = deuda.getValorTotal() / deuda.getTotalCuotas();
 
-	    if (respDeuda == null) {
-	        respDeuda = deuda;
-	    }
+		if (respDeuda == null) {
+			respDeuda = deuda;
+		}
 
-	    respDeuda.setTipoDeuda(deuda.getTipoDeuda());
-	    respDeuda.setDescripcion(deuda.getDescripcion());
-	    respDeuda.setValorTotal(deuda.getValorTotal());
-	    respDeuda.setTotalCuotas(deuda.getTotalCuotas());
-	    respDeuda.setValorAPagar(valorapagar);
-	    respDeuda.setNumCuotaPagada(deuda.getNumCuotaPagada());
-	    respDeuda.setProximaCuota(deuda.getNumCuotaPagada() + 1);
+		respDeuda.setTipoDeuda(deuda.getTipoDeuda());
+		respDeuda.setDescripcion(deuda.getDescripcion());
+		respDeuda.setValorTotal(deuda.getValorTotal());
+		respDeuda.setTotalCuotas(deuda.getTotalCuotas());
+		respDeuda.setValorAPagar(valorapagar);
+		respDeuda.setNumCuotaPagada(deuda.getNumCuotaPagada());
+		respDeuda.setProximaCuota(deuda.getNumCuotaPagada() + 1);
 
-	    // ✅ Validar fechaDeuda antes de usar plusMonths
-	    if (deuda.getFechaDeuda() != null) {
-	        respDeuda.setFechaDeuda(deuda.getFechaDeuda());
-	        respDeuda.setFechaMaxPago(deuda.getFechaDeuda().plusMonths(1));
-	    } else {
-	        // Puedes lanzar una excepción si es obligatorio o poner una fecha por defecto
-	        LocalDateTime ahora = LocalDateTime.now();
-	        respDeuda.setFechaDeuda(ahora);
-	        respDeuda.setFechaMaxPago(ahora.plusMonths(1));
-	    }
+		// ✅ Validar fechaDeuda antes de usar plusMonths
+		if (deuda.getFechaDeuda() != null) {
+			respDeuda.setFechaDeuda(deuda.getFechaDeuda());
+			respDeuda.setFechaMaxPago(deuda.getFechaDeuda().plusMonths(1));
+		} else {
+			// Puedes lanzar una excepción si es obligatorio o poner una fecha por defecto
+			LocalDateTime ahora = LocalDateTime.now();
+			respDeuda.setFechaDeuda(ahora);
+			respDeuda.setFechaMaxPago(ahora.plusMonths(1));
+		}
 
-	    respDeuda.setEstadoDeuda(deuda.getEstadoDeuda());
-	    respDeuda.setEsActivo(true);
+		respDeuda.setEstadoDeuda(deuda.getEstadoDeuda());
+		respDeuda.setEsActivo(true);
 
-	    return _informacionDeudaRepository.save(respDeuda);
+		return _informacionDeudaRepository.save(respDeuda);
 	}
-
 
 	/*
 	 * @Transactional(readOnly = true) public List<InformacionDeudaDTO>

@@ -47,17 +47,11 @@ public class SeguridadConfig {
 	@Bean
 	@Order(2)
 	public SecurityFilterChain webSecurity(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(auth -> auth
-					.requestMatchers("/login", "/registro", "/css/**", "/js/**", "/assets/**")
-					.permitAll().requestMatchers("/admin/**")
-					.hasRole("ADMIN")
-					.anyRequest()
-					.authenticated())
-			.formLogin(form -> form
-					.loginPage("/login")
-					.failureUrl("/login?error")
-					.defaultSuccessUrl("/home", true)
-					.permitAll())
+		http.authorizeHttpRequests(
+				auth -> auth.requestMatchers("/login", "/registro", "/css/**", "/js/**", "/assets/**", "/fonts/**")
+						.permitAll().requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().authenticated())
+				.formLogin(form -> form.loginPage("/login").failureUrl("/login?error").defaultSuccessUrl("/home", true)
+						.permitAll())
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll());
 		return http.build();
 	}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/layout}">
+<head th:replace="layout/layout :: head">
+<title>Registro Usuario</title>
+</head>
+<body>
+
+	<div class="container-fluid" layout:fragment="page-content">
+
+		<div class="container-fluid">
+			<div class="page-header">
+				<h1 class="text-titles">
+					<i class="zmdi zmdi-account zmdi-hc-fw"></i> Registro Usuario
+				</h1>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<ul class="nav nav-tabs" style="margin-bottom: 15px;">
+					<li class="active"><a href="#" data-toggle="tab">Registro
+							Usuario</a></li>
+				</ul>
+				<div id="myTabContent" class="tab-content">
+					<div class="tab-pane fade active in" id="new">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-xs-12 col-md-10 col-md-offset-1">
+
+									<!-- FORMULARIO -->
+									<form th:action="@{/guardar-usuario}" th:object="${usuarios}"
+										method="post" novalidate>
+
+
+										<!-- ID del cliente (clave para edición) -->
+										<input type="hidden" th:field="*{idUsuario}" />
+
+										<div class="form-group label-floating">
+											<label class="control-label">Usuario</label> <input
+												type="text" class="form-control" th:field="*{username}"
+												required autofocus />
+										</div>
+										<div class="form-group label-floating">
+											<label class="control-label">Nombre</label> <input
+												type="text" class="form-control" th:field="*{nombre}"
+												required autofocus />
+										</div>
+										<div class="form-group label-floating">
+											<label class="control-label">Apellido</label> <input
+												type="text" class="form-control" th:field="*{apellido}"
+												required autofocus />
+										</div>
+										<div class="form-group label-floating">
+											<label class="control-label">Identificacion</label> <input
+												type="text" class="form-control"
+												th:field="*{identificacion}" required autofocus />
+										</div>
+										<div class="form-group label-floating">
+											<label class="control-label">Correo</label> <input
+												type="text" class="form-control" th:field="*{correo}"
+												required autofocus />
+										</div>
+
+										<div class="form-group label-floating">
+											<label class="control-label">Celular</label> <input
+												type="text" class="form-control" th:field="*{celular}"
+												required autofocus />
+										</div>
+
+										<div class="form-group label-floating">
+											<label class="control-label">Password</label> <input
+												type="password" class="form-control" th:field="*{password}"
+												required autofocus />
+										</div>
+
+
+										<!-- Mostrar los campos de password solo si es un nuevo usuario -->
+										<!--  <div th:if="${idUsuario} == null">
+											<div class="form-group label-floating">
+												<label class="control-label" for="password">Password</label>
+												<input type="password" class="form-control"
+													th:field="*{password}" required />
+											</div>
+
+											<div class="form-group label-floating">
+												<label class="control-label" for="confirmPassword">Repita
+													su password</label> <input type="password" class="form-control"
+													th:field="*{confirmPassword}" required />
+											</div>
+										</div>-->
+
+
+
+
+										<div class="form-group">
+											<label class="control-label">Estado</label> <select
+												th:field="*{enabled}" class="form-control" required>
+												<option value="true">ACTIVO</option>
+												<option value="false">INACTIVO</option>
+											</select>
+										</div>
+
+
+										<!-- <div class="form-group label-floating">
+											<label class="control-label" for="">Rol</label> <input
+												type="text" class="form-control" id="" placeholder=""
+												required autofocus style="color: white;" />
+										</div>-->
+
+										<!-- Botón -->
+										<p class="text-center">
+											<button type="submit" class="btn btn-info btn-raised btn-sm">
+												<i class="zmdi zmdi-floppy"></i> Guardar
+											</button>
+										</p>
+
+									</form>
+									<!-- FIN FORMULARIO -->
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Scripts adicionales -->
+	<th:block layout:fragment="page-scripts">
+	</th:block>
+
+</body>
+</html>
+
+

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/layout}">
+<head th:replace="layout/layout :: head">
+<title>>Lista Usuarios</title>
+</head>
+<body>
+
+	<div class="container-fluid" layout:fragment="page-content">
+
+		<div class="container-fluid">
+
+			<div th:if="${mensaje}" class="alert alert-success" role="alert">
+				<span th:text="${mensaje}"></span>
+			</div>
+
+			<div th:if="${error}" class="alert alert-danger" role="alert">
+				<span th:text="${error}"></span>
+			</div>
+
+
+
+			<div class="page-header">
+				<h1 class="text-titles">
+					<i class="zmdi zmdi-male-female zmdi-hc-fw"></i> Lista Usuarios
+				</h1>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+
+				<a href="/registro-usuario"
+					class="btn btn-success btn-raised btn-xs"><i
+					class="zmdi zmdi-refresh"></i></a>
+
+
+
+
+				<ul class="nav nav-tabs" style="margin-bottom: 15px;">
+					<li class="active"><a href="#list" data-toggle="tab">Lista
+							Usuarios</a></li>
+				</ul>
+
+
+				<div id="myTabContent" class="tab-content">
+					<div class="tab-pane fade active in" id="list">
+						<div class="table-responsive">
+							<table class="table table-hover text-center">
+								<thead>
+									<tr>
+										<th class="text-center">N°</th>
+										<th class="text-center">Usuario</th>
+										<th class="text-center">Nombre</th>
+										<th class="text-center">Apellido</th>
+										<th class="text-center">Identificacion</th>
+										<th class="text-center">Correo</th>
+										<th class="text-center">Celular</th>
+										<th class="text-center">Estado</th>
+										<th class="text-center">Rol</th>
+										<th class="text-center">Resetear Password</th>
+										<th class="text-center">Actualizar</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="usuario : ${usuarios}">
+										<td th:text="${usuario.idUsuario}"></td>
+										<td th:text="${usuario.username}"></td>
+										<td th:text="${usuario.nombre}"></td>
+										<td th:text="${usuario.apellido}"></td>
+										<td th:text="${usuario.identificacion}"></td>
+										<td th:text="${usuario.correo}"></td>
+										<td th:text="${usuario.celular}"></td>
+										<td th:text="${usuario.enabled}"></td>
+										<!--  <td th:text="${usuario.rol.nombre}"></td>-->
+
+
+										<td><a
+											th:href="@{/reset-password/{id}(id=${usuario.idUsuario})}"
+											class="btn btn-primary btn-xs"
+											onclick="return confirm('¿Está seguro de que desea resetear la contraseña?');">
+												Resetear Password </a></td>
+										<td><a
+											th:href="@{/editar-usuario/{id}(id=${usuario.idUsuario})}"
+											class="btn btn-success btn-raised btn-xs"><i
+												class="zmdi zmdi-refresh"></i></a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
+

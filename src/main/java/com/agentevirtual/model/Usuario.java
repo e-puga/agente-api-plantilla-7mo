@@ -31,62 +31,80 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "users")
+@Table(name = "Usuario")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Usuario implements UserDetails{
-	
+public class Usuario implements UserDetails {
+
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "idUsuario")
+	private int idUsuario;
 
-    @Column(unique=true, nullable=false)
-    private String username;
+	@Column(name = "username", unique = true, nullable = false)
+	private String username;
 
-    @Column(nullable=false)
-    private String password;
+	@Column(name = "nombre")
+	private String nombre;
 
-    private boolean enabled;
+	@Column(name = "apellido")
+	private String apellido;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles",
-        joinColumns = @JoinColumn(name="user_id"),
-        inverseJoinColumns = @JoinColumn(name="role_id"))
-    private Set<Rol> roles;
-    
-    
-    
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.getRoles().stream()
-                .map(rol -> new SimpleGrantedAuthority(rol.getNombre()))
-                .collect(Collectors.toSet());
-    }
-    
-    @Override
-    public String getPassword() {
-        return password;
-    }
+	@Column(name = "identificacion")
+	private String identificacion;
 
-    @Override
-    public String getUsername() {
-        return username;
-    }
+	@Column(name = "correo")
+	private String correo;
 
-    @Override
-    public boolean isAccountNonExpired() { return true; }
+	@Column(name = "celular")
+	private String celular;
 
-    @Override
-    public boolean isAccountNonLocked() { return true; }
+	@Column(name = "password", nullable = false)
+	private String password;
 
-    @Override
-    public boolean isCredentialsNonExpired() { return true; }
+	@Column(name = "enabled")
+	private boolean enabled;
 
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "UsuarioRol", joinColumns = @JoinColumn(name = "idUsuario"), inverseJoinColumns = @JoinColumn(name = "idRol"))
+	private Set<Rol> roles;
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return this.getRoles().stream().map(rol -> new SimpleGrantedAuthority(rol.getNombre()))
+				.collect(Collectors.toSet());
+	}
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public String getUsername() {
+		return username;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled;
+	}
 
 }
