@@ -35,10 +35,17 @@ public class ClienteService {
 		cliente.setEsActivo(true);
 		return _clienteRepository.save(cliente);
 	}
-
 	public List<Cliente> listarClientes() {
-		return _clienteRepository.findAll(Sort.by(Sort.Direction.ASC, "idCliente"));
+	    return _clienteRepository.findByEsActivoTrueOrderByIdClienteAsc();
+	    
+	    
+	    //public List<Cliente> listarClientes() {
+  		//return _clienteRepository.findAll(Sort.by(Sort.Direction.ASC, "idCliente"));   
 	}
+
+	    
+	
+	
 
 	public Cliente obtenerPorIdentificacion(String identificacion) {
 		return _clienteRepository.findByIdentificacion(identificacion).orElse(null);
@@ -94,15 +101,20 @@ public class ClienteService {
 	}
 
 	public Boolean eliminarRegistroCliente(int id) {
+	    Cliente cliente = _clienteRepository.findById(id).orElse(null);
 
-		Boolean respCliente = false;
-		List<InformacionDeuda> informacionDeuda = _informacionDeudaRepository.findByCliente_IdCliente(id);
+	    if (cliente != null) {
+	        List<InformacionDeuda> informacionDeuda = _informacionDeudaRepository.findByCliente_IdCliente(id);
 
-		if (informacionDeuda == null || informacionDeuda.isEmpty()) {
-			_clienteRepository.deleteById(id);
-			respCliente = true;
-		}
-		return respCliente;
+	        if (informacionDeuda == null || informacionDeuda.isEmpty()) {
+	            cliente.setEsActivo(false);
+	            _clienteRepository.save(cliente);
+	            return true;
+	        }
+	    }
+
+	    return false;
 	}
+
 
 }

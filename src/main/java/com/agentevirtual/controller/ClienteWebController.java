@@ -68,12 +68,7 @@ public class ClienteWebController {
 
 	@GetMapping("/eliminarRegistroCliente/{id}")
 	public String eliminarRegistroCliente(@PathVariable("id") Integer id) {
-
 		Boolean respCliente = _clienteService.eliminarRegistroCliente(id);
-
-		if (respCliente == true) {
-			return "redirect:/ver-clientes";
-		}
 		return "redirect:/ver-clientes";
 	}
 }
