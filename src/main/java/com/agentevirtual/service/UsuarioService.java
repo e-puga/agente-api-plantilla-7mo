@@ -30,8 +30,8 @@ public class UsuarioService {
 			usuario.setEnabled(true);
 			usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
 			// Buscar rol CLIENTE en la base de datos
-			Rol rolCliente = _rolRepository.findByNombre("GESTOR")
-					.orElseThrow(() -> new RuntimeException("Rol CLIENTE no encontrado"));
+			Rol rolCliente = _rolRepository.findByNombre("ROLE_GESTOR")
+					.orElseThrow(() -> new RuntimeException("Rol GESTOR no encontrado"));
 			// Asignar rol CLIENTE al usuario
 			usuario.setRoles(Set.of(rolCliente));
 			usuariodb = usuario;

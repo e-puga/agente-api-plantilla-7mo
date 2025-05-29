@@ -49,7 +49,9 @@ public class SeguridadConfig {
 	public SecurityFilterChain webSecurity(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(
 				auth -> auth.requestMatchers("/login", "/registro", "/css/**", "/js/**", "/assets/**", "/fonts/**")
-						.permitAll().requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().authenticated())
+						.permitAll().requestMatchers("/admin/**").hasRole("ADMIN")
+						// .requestMatchers("/clientes/**").hasAnyRole("ADMIN", "GESTOR")
+						.anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").failureUrl("/login?error").defaultSuccessUrl("/home", true)
 						.permitAll())
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll());

@@ -5,12 +5,17 @@ import com.agentevirtual.model.InformacionDeuda;
 import com.agentevirtual.repository.ClienteRepository;
 import com.agentevirtual.repository.InformacionDeudaRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,15 +29,40 @@ public class ClienteService {
 	@Autowired
 	private InformacionDeudaRepository _informacionDeudaRepository;
 
-	public Cliente registrarCliente(Cliente cliente) {
+	/*
+	 * public Cliente registrarCliente(Cliente cliente) { Optional<Cliente>
+	 * existente =
+	 * _clienteRepository.findByIdentificacion(cliente.getIdentificacion());
+	 * 
+	 * if (existente.isPresent()) { throw new
+	 * RuntimeException("Ya existe un cliente con esa identificación."); }
+	 * 
+	 * cliente.setEsActivo(true); cliente.setEsActivo(true); return
+	 * _clienteRepository.save(cliente); }
+	 */
+
+	public Cliente registrarCliente(Cliente cliente, HttpServletRequest request) {
 		Optional<Cliente> existente = _clienteRepository.findByIdentificacion(cliente.getIdentificacion());
 
 		if (existente.isPresent()) {
 			throw new RuntimeException("Ya existe un cliente con esa identificación.");
 		}
 
+		// Obtener usuario autenticado (Spring Security)
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String nombreUsuario = auth != null ? auth.getName() : "desconocido";
+
+		// Obtener nombre o IP de la estación
+		String estacion = request.getRemoteHost(); // o request.getRemoteAddr()
+
+		// String estacion = request.getRemoteAddr();
+
+		// Asignar campos de auditoría
+		cliente.setFechaRegistro(LocalDateTime.now());
+		cliente.setUsuarioRegistro(nombreUsuario);
+		cliente.setEstacionRegistro(estacion);
 		cliente.setEsActivo(true);
-		cliente.setEsActivo(true);
+
 		return _clienteRepository.save(cliente);
 	}
 	public List<Cliente> listarClientes() {

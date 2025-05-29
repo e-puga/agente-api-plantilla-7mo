@@ -2,6 +2,8 @@ package com.agentevirtual.controller;
 
 import com.agentevirtual.model.Cliente;
 import com.agentevirtual.service.ClienteService;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -49,9 +51,21 @@ public class ClienteController {
 	 * body("No se encontró el cliente con identificación: " + identificacion)); }
 	 */
 
+	/*
+	 * @PostMapping("/registroCliente") public Cliente registroCliente(@RequestBody
+	 * Cliente cliente) { return _clienteService.registrarCliente(cliente); }
+	 */
+
+	/*
+	 * @PostMapping("/registroCliente") public ResponseEntity<Cliente>
+	 * registroCliente(@RequestBody Cliente cliente, HttpServletRequest request) {
+	 * Cliente creado = _clienteService.registrarCliente(cliente, request); return
+	 * ResponseEntity.ok(creado); }
+	 */
+
 	@PostMapping("/registroCliente")
-	public Cliente registroCliente(@RequestBody Cliente cliente) {
-		return _clienteService.registrarCliente(cliente);
+	public Cliente registroCliente(@RequestBody Cliente cliente, HttpServletRequest request) {
+		return _clienteService.registrarCliente(cliente, request);
 	}
 
 	@GetMapping("/listarClientes")

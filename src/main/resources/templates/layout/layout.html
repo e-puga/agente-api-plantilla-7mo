@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> lang="es">
+
 <head th:fragment="head">
-<title>Agente Virtual</title>
-<meta charset="UTF-8">
-<meta name="viewport"
-	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<link rel="stylesheet" th:href="@{/css/main.css}">
-<!--  <th:block layout:insert="~{::page-styles}" />-->
+	<title>Agente Virtual</title>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+		content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" th:href="@{/css/main.css}">
+	<!--  <th:block layout:insert="~{::page-styles}" />-->
 </head>
+
 <body>
 
 	<!-- SideBar -->
@@ -16,10 +18,8 @@
 		<div class="full-box dashboard-sideBar-bg btn-menu-dashboard"></div>
 		<div class="full-box dashboard-sideBar-ct">
 			<!--SideBar Title -->
-			<div
-				class="full-box text-uppercase text-center text-titles dashboard-sideBar-title">
-				Agente Virtual <i
-					class="zmdi zmdi-close btn-menu-dashboard visible-xs"></i>
+			<div class="full-box text-uppercase text-center text-titles dashboard-sideBar-title">
+				Agente Virtual <i class="zmdi zmdi-close btn-menu-dashboard visible-xs"></i>
 			</div>
 			<!-- SideBar User info -->
 			<div class="full-box dashboard-sideBar-UserInfo">
@@ -28,26 +28,22 @@
 					<figcaption class="text-center text-titles"></figcaption>
 				</figure>
 				<ul class="full-box list-unstyled text-center">
-					<li><a href="#"
-						onclick="document.getElementById('logoutForm').submit();"> <i
-							class="zmdi zmdi-power"></i>
-					</a>
-						<form id="logoutForm" th:action="@{/logout}" method="post"
-							style="display: none;">
-							<input type="hidden" name="${_csrf.parameterName}"
-								value="${_csrf.token}" />
-						</form></li>
+					<li><a href="#" onclick="document.getElementById('logoutForm').submit();"> <i
+								class="zmdi zmdi-power"></i>
+						</a>
+						<form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+						</form>
+					</li>
 				</ul>
 			</div>
 			<!-- SideBar Menu -->
 			<ul class="list-unstyled full-box dashboard-sideBar-Menu">
 
-				<li><a href="/gestion-usuario"><i
-						class="zmdi zmdi-account zmdi-hc-fw"></i> Gestión Usuarios</a></li>
-				<li><a href="/registro-cliente"><i
-						class="zmdi zmdi-account zmdi-hc-fw"></i> Registro Cliente </a></li>
-				<li><a href="/ver-clientes"><i
-						class="zmdi zmdi-male-alt zmdi-hc-fw"></i>Lista Clientes</a></li>
+				<li sec:authorize="hasRole('ADMIN')"><a href="/gestion-usuario"><i
+							class="zmdi zmdi-account zmdi-hc-fw"></i> Gestión Usuarios</a></li>
+				<li><a href="/registro-cliente"><i class="zmdi zmdi-account zmdi-hc-fw"></i> Registro Cliente </a></li>
+				<li><a href="/ver-clientes"><i class="zmdi zmdi-male-alt zmdi-hc-fw"></i>Lista Clientes</a></li>
 				<!--<li><a href="/registro-deuda"><i
 						class="zmdi zmdi-face zmdi-hc-fw"></i> Regitro Deuda</a></li>-->
 			</ul>
@@ -62,17 +58,15 @@
 		<!-- NavBar -->
 		<nav class="full-box dashboard-Navbar">
 			<ul class="full-box list-unstyled text-right">
-				<li class="pull-left"><a href="#!" class="btn-menu-dashboard"><i
-						class="zmdi zmdi-more-vert"></i></a></li>
-				<li><a href="#!" class="btn-Notifications-area"> <i
-						class="zmdi zmdi-notifications-none"></i> <span class="badge">7</span>
-				</a></li>
-				<li><a href="#!" class="btn-search"> <i
-						class="zmdi zmdi-search"></i>
-				</a></li>
-				<li><a href="#!" class="btn-modal-help"> <i
-						class="zmdi zmdi-help-outline"></i>
-				</a></li>
+				<li class="pull-left"><a href="#!" class="btn-menu-dashboard"><i class="zmdi zmdi-more-vert"></i></a>
+				</li>
+				<li><a href="#!" class="btn-Notifications-area"> <i class="zmdi zmdi-notifications-none"></i> <span
+							class="badge">7</span>
+					</a></li>
+				<li><a href="#!" class="btn-search"> <i class="zmdi zmdi-search"></i>
+					</a></li>
+				<li><a href="#!" class="btn-modal-help"> <i class="zmdi zmdi-help-outline"></i>
+					</a></li>
 			</ul>
 		</nav>
 
@@ -150,8 +144,7 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<h4 class="modal-title">Help</h4>
@@ -163,8 +156,7 @@
 						veritatis a unde autem!</p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary btn-raised"
-						data-dismiss="modal">
+					<button type="button" class="btn btn-primary btn-raised" data-dismiss="modal">
 						<i class="zmdi zmdi-thumb-up"></i> Ok
 					</button>
 				</div>
@@ -188,4 +180,5 @@
 
 
 </body>
+
 </html>

@@ -3,6 +3,7 @@ package com.agentevirtual.controller;
 import com.agentevirtual.model.Cliente;
 import com.agentevirtual.service.ClienteService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -26,18 +27,18 @@ public class ClienteWebController {
 	}
 
 	@PostMapping("/guardar-cliente")
-	public String guardarCliente(@Valid @ModelAttribute("cliente") Cliente cliente, BindingResult result, Model model) {
-		Cliente respCliente = _clienteService.guardarCliente(cliente);
-		
+	public String guardarCliente(@Valid @ModelAttribute("cliente") Cliente cliente, BindingResult result, Model model,
+			HttpServletRequest request) {
 		if (result.hasErrors()) {
-	        return "registroCliente"; // o la vista donde está tu formulario
-	    }
+			return "registroCliente";
+		}
 
-		
 		if (cliente == null) {
 			return "registroCliente";
 		}
-		
+
+		_clienteService.registrarCliente(cliente, request);
+
 		return "redirect:/ver-clientes";
 	}
 
@@ -50,10 +51,10 @@ public class ClienteWebController {
 
 	@GetMapping("/editarCliente/{id}")
 	public String mostrarFormularioEditarCliente(@PathVariable("id") Integer id, Model model) {
-	    Cliente cliente = _clienteService.obtenerClientePorId(id);
-	    model.addAttribute("cliente", cliente);
-	    model.addAttribute("accion", "/editarRegistroCliente/" + id); // usado por th:action
-	    return "registroCliente";
+		Cliente cliente = _clienteService.obtenerClientePorId(id);
+		model.addAttribute("cliente", cliente);
+		model.addAttribute("accion", "/editarRegistroCliente/" + id); // usado por th:action
+		return "registroCliente";
 	}
 
 	@PostMapping("/editarRegistroCliente/{id}")

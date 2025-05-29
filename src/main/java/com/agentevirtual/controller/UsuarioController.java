@@ -3,6 +3,7 @@ package com.agentevirtual.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +36,7 @@ public class UsuarioController {
 	 * { model.addAttribute("usuario", new Usuario()); return "registro"; }
 	 */
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/guardar-usuario")
 	public String procesarRegistro(@ModelAttribute("usuario") Usuario usuario) {
 		_usuarioService.guardarUsuario(usuario);
@@ -46,6 +48,7 @@ public class UsuarioController {
 		return "index";
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/gestion-usuario")
 	public String gestionUsuario(Model model) {
 		List<Usuario> usuario = _usuarioService.listarUsuarios();
@@ -53,6 +56,7 @@ public class UsuarioController {
 		return "verUsuarios";
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/registro-usuario")
 	public String registroUsuario(Model model) {
 		Usuario usuario = new Usuario();
@@ -62,6 +66,7 @@ public class UsuarioController {
 		return "registroUsuario";
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/editar-usuario/{id}")
 	public String mostrarFormularioEditarUsuario(@PathVariable("id") Integer id, Model model) {
 		Usuario usuario = _usuarioService.obtenerUsuarioPorId(id);
@@ -70,6 +75,7 @@ public class UsuarioController {
 		return "registroUsuario";
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/editarRegistroUsuario/{id}")
 	public String actualizarRegistroCliente(@PathVariable("id") int id, @ModelAttribute Usuario usuario) {
 		Usuario respUsuario = _usuarioService.actualizarRegistroUsuario(usuario);
@@ -80,6 +86,7 @@ public class UsuarioController {
 		return "redirect:/gestion-usuario";
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/reset-password/{id}")
 	public String resetearPasswordUsuario(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
 		String mensaje = _usuarioService.resetearPassword(id);
