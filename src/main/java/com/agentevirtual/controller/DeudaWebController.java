@@ -103,8 +103,14 @@ public class DeudaWebController {
 	@GetMapping("/eliminarRegistroDeuda/{id}")
 	public String eliminarRegistroDeuda(@PathVariable("id") Integer id) {
 
-		Integer respInfoDeuda = _informacionDeudaService.eliminarRegistroDeuda(id);
-		return "redirect:/ver-deudas/" + respInfoDeuda;
+	    boolean eliminada = _informacionDeudaService.eliminarRegistroDeudaLogicamente(id);
+
+	    
+	    InformacionDeuda deuda = _informacionDeudaService.obtenerDeudaPorId(id);
+	    int idCliente = deuda.getCliente().getIdCliente();
+	    return "redirect:/ver-deudas/" + idCliente;
+
 	}
+
 
 }

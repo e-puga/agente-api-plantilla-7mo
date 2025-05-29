@@ -1,5 +1,6 @@
 package com.agentevirtual.service;
 
+import com.agentevirtual.configuracion.SeguridadConfig;
 import com.agentevirtual.dto.InformacionDeudaDTO;
 import com.agentevirtual.model.Cliente;
 import com.agentevirtual.model.InformacionDeuda;
@@ -23,11 +24,17 @@ import java.util.Optional;
 //@RequiredArgsConstructor
 public class InformacionDeudaService {
 
+    private final SeguridadConfig seguridadConfig;
+
 	@Autowired
 	private InformacionDeudaRepository _informacionDeudaRepository;
 
 	@Autowired
 	private ClienteRepository _clienteRepository;
+
+    InformacionDeudaService(SeguridadConfig seguridadConfig) {
+        this.seguridadConfig = seguridadConfig;
+    }
 
 	/*
 	 * @Autowired private ClienteRepository _clienteRepository;
@@ -39,7 +46,7 @@ public class InformacionDeudaService {
 	}
 
 	public List<InformacionDeuda> listarDeudasPorCliente(int idCliente) {
-		return _informacionDeudaRepository.findByCliente_IdCliente(idCliente);
+		return _informacionDeudaRepository.findByCliente_IdClienteAndEsActivoTrue(idCliente);
 	}
 
 	public List<InformacionDeuda> listarDeudasPorIdentificacion(String identificacion) {
@@ -75,17 +82,18 @@ public class InformacionDeudaService {
 		return respInfoDeuda;
 	}
 
-	public Integer eliminarRegistroDeuda(int id) {
-
-		Integer respInfoDeuda = 0;
-		InformacionDeuda informacionDeuda = _informacionDeudaRepository.findById(id).orElse(null);
-
-		if (informacionDeuda != null) {
-			respInfoDeuda = informacionDeuda.getCliente().getIdCliente();
-			_informacionDeudaRepository.deleteById(id);
-		}
-		return respInfoDeuda;
+	public boolean eliminarRegistroDeudaLogicamente(int id) {
+	    Optional<InformacionDeuda> deudaOpt = _informacionDeudaRepository.findById(id);
+	    if (deudaOpt.isPresent()) {
+	        InformacionDeuda deuda = deudaOpt.get();
+	        deuda.setEsActivo(false);
+	        _informacionDeudaRepository.save(deuda);
+	        return true;
+	    }
+	    return false;
 	}
+	
+
 
 	public InformacionDeuda guardarDeuda(InformacionDeuda deuda) {
 

@@ -25,7 +25,7 @@ public class ClienteWebController {
 		model.addAttribute("cliente", new Cliente());
 		return "registroCliente";
 	}
-
+	
 	@PostMapping("/guardar-cliente")
 	public String guardarCliente(@Valid @ModelAttribute("cliente") Cliente cliente, BindingResult result, Model model,
 			HttpServletRequest request) {

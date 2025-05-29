@@ -21,7 +21,7 @@ public class InformacionDeudaController {
 		_informacionDeudaService = informacionDeudaService;
 	}
 
-	@PostMapping("/registro")
+	@PostMapping("/registro")	
 	public ResponseEntity<?> registrarDeuda(@Valid @RequestBody InformacionDeuda deuda) {
 		try {
 			InformacionDeuda nuevaDeuda = _informacionDeudaService.registrarDeuda(deuda);
@@ -49,6 +49,16 @@ public class InformacionDeudaController {
 		} catch (RuntimeException e) {
 			return ResponseEntity.badRequest().body(null);
 		}
+	}
+	
+	@DeleteMapping("/eliminar/{id}")
+	public ResponseEntity<String> eliminarDeuda(@PathVariable int id) {
+	    boolean eliminada = _informacionDeudaService.eliminarRegistroDeudaLogicamente(id);
+	    if (eliminada) {
+	        return ResponseEntity.ok("Deuda eliminada lógicamente.");
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
 	}
 
 }

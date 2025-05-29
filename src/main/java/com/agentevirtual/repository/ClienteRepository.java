@@ -12,7 +12,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
 	Optional<Cliente> findByIdentificacion(String identificacion);
 	
-	List<Cliente> findByEsActivoTrueOrderByIdClienteAsc();
+	//List<Cliente> findByEsActivoTrueOrderByIdClienteAsc();
+	List<Cliente> findByEsActivoTrue();
 
 	// Cliente findByIdentificacion(String identificacion);
 }
