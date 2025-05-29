@@ -25,7 +25,7 @@ public class ClienteWebController {
 		model.addAttribute("cliente", new Cliente());
 		return "registroCliente";
 	}
-	
+
 	@PostMapping("/guardar-cliente")
 	public String guardarCliente(@Valid @ModelAttribute("cliente") Cliente cliente, BindingResult result, Model model,
 			HttpServletRequest request) {
@@ -53,7 +53,7 @@ public class ClienteWebController {
 	public String mostrarFormularioEditarCliente(@PathVariable("id") Integer id, Model model) {
 		Cliente cliente = _clienteService.obtenerClientePorId(id);
 		model.addAttribute("cliente", cliente);
-		model.addAttribute("accion", "/editarRegistroCliente/" + id); // usado por th:action
+		model.addAttribute("accion", "/editarRegistroCliente/" + id);
 		return "registroCliente";
 	}
 

@@ -27,42 +27,6 @@ public class ClienteController {
 		_clienteService = clienteService;
 	}
 
-	/*
-	 * @PostMapping("/registro") public ResponseEntity<?>
-	 * registrarCliente(@Valid @RequestBody Cliente cliente, BindingResult result) {
-	 * if (result.hasErrors()) { String mensaje = result.getFieldErrors() .stream()
-	 * .map(e -> e.getField() + ": " + e.getDefaultMessage()) .reduce("", (a, b) ->
-	 * a + b + "; "); return ResponseEntity.badRequest().body(mensaje); }
-	 * 
-	 * try { Cliente nuevoCliente = _clienteService.registrarCliente(cliente);
-	 * return ResponseEntity.ok(nuevoCliente); } catch (RuntimeException e) { return
-	 * ResponseEntity.badRequest().body(e.getMessage()); } }
-	 */
-
-	/*
-	 * @GetMapping() public ResponseEntity<List<Cliente>> listarClientes() { return
-	 * ResponseEntity.ok(_clienteService.listarClientes()); }
-	 * 
-	 * @GetMapping("/{identificacion}") public ResponseEntity<?>
-	 * obtenerPorIdentificacion(@PathVariable String identificacion) { Cliente
-	 * cliente = _clienteService.obtenerPorIdentificacion(identificacion); return
-	 * cliente.<ResponseEntity<?>>map(ResponseEntity::ok) .orElseGet(() ->
-	 * ResponseEntity.badRequest().
-	 * body("No se encontró el cliente con identificación: " + identificacion)); }
-	 */
-
-	/*
-	 * @PostMapping("/registroCliente") public Cliente registroCliente(@RequestBody
-	 * Cliente cliente) { return _clienteService.registrarCliente(cliente); }
-	 */
-
-	/*
-	 * @PostMapping("/registroCliente") public ResponseEntity<Cliente>
-	 * registroCliente(@RequestBody Cliente cliente, HttpServletRequest request) {
-	 * Cliente creado = _clienteService.registrarCliente(cliente, request); return
-	 * ResponseEntity.ok(creado); }
-	 */
-
 	@PostMapping("/registroCliente")
 	public Cliente registroCliente(@RequestBody Cliente cliente, HttpServletRequest request) {
 		return _clienteService.registrarCliente(cliente, request);

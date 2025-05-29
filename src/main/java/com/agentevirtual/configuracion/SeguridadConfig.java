@@ -8,7 +8,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import com.agentevirtual.service.ServicioDetalleUsuario;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,41 +31,29 @@ public class SeguridadConfig {
 		return proveedor;
 	}
 
-	// 1️⃣ Seguridad para la API REST
+	// Seguridad para la API REST
 	@Bean
 	@Order(1)
 	public SecurityFilterChain apiSecurity(HttpSecurity http) throws Exception {
-		http.securityMatcher("/api/**") // Aplica solo a rutas /api/**
-				.csrf(csrf -> csrf.disable()) // Desactiva CSRF solo para API
+		http.securityMatcher("/api/**").csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/**").authenticated()).httpBasic(); // Requiere
 																												// autenticación
 																												// básica
-																												// (útil
-																												// para
-																												// n8n/Postman)
 		return http.build();
 	}
 
-	// 2️⃣ Seguridad para la web (formularios y HTML)
+	// Seguridad para la web (formularios y HTML)
 	@Bean
 	@Order(2)
 	public SecurityFilterChain webSecurity(HttpSecurity http) throws Exception {
-		http
-			.authenticationManager(authenticationManager()) // <-- añade esto
-			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/login", "/registro", "/css/**", "/js/**", "/assets/**", "/fonts/**").permitAll()
-				.requestMatchers("/admin/**").hasRole("ADMIN")
-				.anyRequest().authenticated())
-			.formLogin(form -> form
-				.loginPage("/login")
-				.failureHandler(failureHandler)
-				//.failureUrl("/login?error") // este puede ser opcional si usas failureHandler
-				.defaultSuccessUrl("/home", true)
-				.permitAll())
-			.logout(logout -> logout
-				.logoutUrl("/logout")
-				.logoutSuccessUrl("/login?logout")
-				.permitAll());
+		http.authenticationManager(authenticationManager())
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/login", "/registro", "/css/**", "/js/**", "/assets/**", "/fonts/**")
+						.permitAll().requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().authenticated())
+				.formLogin(form -> form.loginPage("/login").failureHandler(failureHandler)
+						// .failureUrl("/login?error")
+						.defaultSuccessUrl("/home", true).permitAll())
+				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll());
 
 		return http.build();
 	}

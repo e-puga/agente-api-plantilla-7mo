@@ -1,23 +1,16 @@
 package com.agentevirtual.controller;
 
-import com.agentevirtual.dto.InformacionDeudaDTO;
 import com.agentevirtual.model.Cliente;
 import com.agentevirtual.model.InformacionDeuda;
-import com.agentevirtual.repository.ClienteRepository;
-import com.agentevirtual.repository.InformacionDeudaRepository;
 import com.agentevirtual.service.ClienteService;
 import com.agentevirtual.service.InformacionDeudaService;
-
-import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class DeudaWebController {
@@ -44,14 +37,6 @@ public class DeudaWebController {
 		return "registroDeuda";
 	}
 
-	/*
-	 * @GetMapping("/ver-deudas/{idCliente}") public String
-	 * verDeudasPorCliente(@PathVariable int idCliente, Model model) {
-	 * List<InformacionDeudaDTO> deudas =
-	 * _informacionDeudaService.listarDeudasDTOPorCliente(idCliente);
-	 * model.addAttribute("deudas", deudas); return "verDeudas"; }
-	 */
-
 	@GetMapping("/ver-deudas/{idCliente}")
 	public String verDeudasPorCliente(@PathVariable int idCliente, Model model) {
 		try {
@@ -59,9 +44,9 @@ public class DeudaWebController {
 			model.addAttribute("deudas", deudas);
 			return "verDeudas";
 		} catch (Exception e) {
-			e.printStackTrace(); // o usa logger
+			e.printStackTrace();
 			model.addAttribute("error", "Error al consultar las deudas");
-			return "error"; // asegúrate de tener esta vista
+			return "error";
 		}
 	}
 
@@ -72,11 +57,9 @@ public class DeudaWebController {
 
 		if (respInfoDeuda == null) {
 			model.addAttribute("error", "transacción no registrada.");
-			model.addAttribute("informacionDeuda", deuda); // para que se conserve en el reenvío
+			model.addAttribute("informacionDeuda", deuda);
 			return "registroDeuda";
 		}
-
-		// Redirige a ver deudas del cliente
 		return "redirect:/ver-deudas/" + deuda.getCliente().getIdCliente();
 	}
 
@@ -103,14 +86,7 @@ public class DeudaWebController {
 	@GetMapping("/eliminarRegistroDeuda/{id}")
 	public String eliminarRegistroDeuda(@PathVariable("id") Integer id) {
 
-	    boolean eliminada = _informacionDeudaService.eliminarRegistroDeudaLogicamente(id);
-
-	    
-	    InformacionDeuda deuda = _informacionDeudaService.obtenerDeudaPorId(id);
-	    int idCliente = deuda.getCliente().getIdCliente();
-	    return "redirect:/ver-deudas/" + idCliente;
-
+		Integer respInfoDeuda = _informacionDeudaService.eliminarRegistroDeuda(id);
+		return "redirect:/ver-deudas/" + respInfoDeuda;
 	}
-
-
 }

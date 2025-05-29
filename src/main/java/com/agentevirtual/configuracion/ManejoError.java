@@ -16,18 +16,17 @@ import java.io.IOException;
 public class ManejoError implements AuthenticationFailureHandler {
 
 	@Override
-    public void onAuthenticationFailure(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        AuthenticationException exception) throws IOException, ServletException {
+	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException exception) throws IOException, ServletException {
 
-        String error = "error";
+		String error = "error";
 
-        if (exception instanceof DisabledException) {
-            error = "disabled";
-        } else if (exception instanceof BadCredentialsException) {
-            error = "bad_credentials";
-        }
+		if (exception instanceof DisabledException) {
+			error = "disabled";
+		} else if (exception instanceof BadCredentialsException) {
+			error = "bad_credentials";
+		}
 
-        response.sendRedirect("/login?error=" + error);
-    }
+		response.sendRedirect("/login?error=" + error);
+	}
 }

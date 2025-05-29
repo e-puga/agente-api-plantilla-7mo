@@ -1,12 +1,10 @@
 package com.agentevirtual.service;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.agentevirtual.model.Cliente;
 import com.agentevirtual.model.Rol;
 import com.agentevirtual.model.Usuario;
 import com.agentevirtual.repository.RolRepository;
@@ -19,21 +17,18 @@ import lombok.RequiredArgsConstructor;
 public class UsuarioService {
 
 	private final UsuarioRepository _usuarioRepository;
-	private final RolRepository _rolRepository; // Agregado
+	private final RolRepository _rolRepository;
 	private final BCryptPasswordEncoder passwordEncoder;
 
 	public Usuario guardarUsuario(Usuario usuario) {
-
 		Usuario usuariodb = _usuarioRepository.findById(usuario.getIdUsuario()).orElse(null);
+		Rol rolUsuario = _rolRepository.findById(usuario.getIdRolSeleccionado()).orElse(null);
 
 		if (usuariodb == null) {
 			usuario.setEnabled(true);
 			usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-			// Buscar rol CLIENTE en la base de datos
-			Rol rolCliente = _rolRepository.findByNombre("ROLE_GESTOR")
-					.orElseThrow(() -> new RuntimeException("Rol GESTOR no encontrado"));
-			// Asignar rol CLIENTE al usuario
-			usuario.setRoles(Set.of(rolCliente));
+			usuario.setRol(rolUsuario);
+
 			usuariodb = usuario;
 		} else {
 			usuariodb.setUsername(usuario.getUsername());
@@ -44,9 +39,10 @@ public class UsuarioService {
 			usuariodb.setCorreo(usuario.getCorreo());
 			usuariodb.setIdentificacion(usuario.getIdentificacion());
 			usuariodb.setEnabled(usuario.isEnabled());
+			usuariodb.setRol(rolUsuario);
 		}
-		// Guardar usuario con rol asignado
-		return _usuarioRepository.save(usuario);
+
+		return _usuarioRepository.save(usuariodb);
 	}
 
 	public List<Usuario> listarUsuarios() {
@@ -57,25 +53,28 @@ public class UsuarioService {
 		return _usuarioRepository.findById(id).orElse(null);
 	}
 
-	public Usuario actualizarRegistroUsuario(Usuario usuario) {
+	public Usuario actualizarRegistroUsuario(Usuario usuarioFormulario) {
 
-		Usuario respUsuario = obtenerUsuarioPorId(usuario.getIdUsuario());
+		Usuario usuarioBD = _usuarioRepository.findById(usuarioFormulario.getIdUsuario())
+				.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-		if (respUsuario != null) {
-			respUsuario.setUsername(usuario.getUsername());
-			respUsuario.setNombre(usuario.getNombre());
-			respUsuario.setApellido(usuario.getApellido());
-			respUsuario.setIdentificacion(usuario.getIdentificacion());
-			respUsuario.setCorreo(usuario.getCorreo());
-			respUsuario.setCelular(usuario.getCelular());
-			respUsuario.setPassword(usuario.getPassword());
-			respUsuario.setEnabled(usuario.isEnabled());
+		usuarioBD.setNombre(usuarioFormulario.getNombre());
+		usuarioBD.setApellido(usuarioFormulario.getApellido());
+		usuarioBD.setCorreo(usuarioFormulario.getCorreo());
+		usuarioBD.setCelular(usuarioFormulario.getCelular());
+		usuarioBD.setIdentificacion(usuarioFormulario.getIdentificacion());
+		usuarioBD.setEnabled(usuarioFormulario.isEnabled());
 
-			respUsuario.setRoles(usuario.getRoles());
+		System.out.println("usuario:" + usuarioFormulario.getIdRolSeleccionado());
 
-			respUsuario = _usuarioRepository.save(respUsuario);
+		if (usuarioFormulario.getIdRolSeleccionado() != null) {
+
+			Rol nuevoRol = _rolRepository.findById(usuarioFormulario.getIdRolSeleccionado())
+					.orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+			usuarioBD.setRol(nuevoRol);
 		}
-		return respUsuario;
+
+		return _usuarioRepository.save(usuarioBD);
 	}
 
 	public String resetearPassword(Integer id) {
@@ -96,5 +95,10 @@ public class UsuarioService {
 
 	public List<Rol> listarRoles() {
 		return _rolRepository.findAll();
+	}
+
+	public Rol obtenerRolPorId(int idRol) {
+
+		return _rolRepository.findById(idRol).orElse(null);
 	}
 }

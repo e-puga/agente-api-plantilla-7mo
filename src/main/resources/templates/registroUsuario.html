@@ -17,9 +17,9 @@
 			</div>
 		</div>
 
-		<!--<p>Usuario: <span th:text="${usuarios}">null</span></p>-->
-
-		<!--<p>ID Usuario: <span th:text="${usuarios.idUsuario}">null</span></p>-->
+		<!--<p>Usuario: <span th:text="${usuarios}">null</span></p>
+		<p>ID Usuario: <span th:text="${usuarios.idUsuario}">null</span></p>
+		<p>Roles: <span th:text="${listaRoles}">null</span></p>-->
 
 		<div class="row">
 			<div class="col-xs-12">
@@ -51,15 +51,8 @@
 												<input type="password" class="form-control" th:field="*{password}"
 													required />
 											</div>
-
-											<!--<div class="form-group label-floating">
-													<label class="control-label" for="confirmPassword">Confirmar Password</label>
-													<input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required />
-												</div>-->
 										</div>
 
-
-										<!-- Si se está editando: enviar la contraseña como hidden -->
 										<!-- Campo oculto solo al editar -->
 										<div th:if="${usuarios.idUsuario > 0 }">
 											<input type="hidden" th:field="*{password}" />
@@ -92,16 +85,6 @@
 												pattern="\d{10}" title="10 dígitos numéricos" />
 										</div>
 
-										<!-- Solo mostrar contraseña si es nuevo -->
-										<!-- Campo visible solo al crear -->
-										<!--<div th:if="${usuarios.idUsuario == 0}">
-											<label for="password">Contraseña</label>
-											<input type="password" th:field="*{password}" id="password" required />
-										</div>-->
-
-
-
-
 										<div class="form-group">
 											<label class="control-label">Estado</label>
 											<select th:field="*{enabled}" class="form-control" required>
@@ -110,15 +93,15 @@
 											</select>
 										</div>
 
-										<!--<div class="form-group">
+										<div class="form-group">
 											<label class="control-label">Rol</label>
-											<select class="form-control" th:field="*{rol.idRol}" required>
-												<option value="" disabled selected>Seleccione un rol</option>
+											<select class="form-control" th:field="*{idRolSeleccionado}" required>
+												<option value="" disabled>Seleccione un rol</option>
 												<option th:each="rol : ${listaRoles}" th:value="${rol.idRol}"
 													th:text="${rol.nombre}">
 												</option>
 											</select>
-										</div>-->
+										</div>
 
 										<p class="text-center">
 											<button type="submit" class="btn btn-info btn-raised btn-sm">

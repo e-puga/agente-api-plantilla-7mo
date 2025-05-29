@@ -1,10 +1,8 @@
 package com.agentevirtual.controller;
 
-import com.agentevirtual.dto.InformacionDeudaDTO;
 import com.agentevirtual.model.InformacionDeuda;
 import com.agentevirtual.service.InformacionDeudaService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/deudas")
-//@RequiredArgsConstructor
 public class InformacionDeudaController {
 
 	private final InformacionDeudaService _informacionDeudaService;
@@ -21,7 +18,7 @@ public class InformacionDeudaController {
 		_informacionDeudaService = informacionDeudaService;
 	}
 
-	@PostMapping("/registro")	
+	@PostMapping("/registro")
 	public ResponseEntity<?> registrarDeuda(@Valid @RequestBody InformacionDeuda deuda) {
 		try {
 			InformacionDeuda nuevaDeuda = _informacionDeudaService.registrarDeuda(deuda);
@@ -50,15 +47,4 @@ public class InformacionDeudaController {
 			return ResponseEntity.badRequest().body(null);
 		}
 	}
-	
-	@DeleteMapping("/eliminar/{id}")
-	public ResponseEntity<String> eliminarDeuda(@PathVariable int id) {
-	    boolean eliminada = _informacionDeudaService.eliminarRegistroDeudaLogicamente(id);
-	    if (eliminada) {
-	        return ResponseEntity.ok("Deuda eliminada lógicamente.");
-	    } else {
-	        return ResponseEntity.notFound().build();
-	    }
-	}
-
 }

@@ -1,30 +1,19 @@
 package com.agentevirtual.service;
 
-import com.agentevirtual.configuracion.SeguridadConfig;
-import com.agentevirtual.dto.InformacionDeudaDTO;
 import com.agentevirtual.model.Cliente;
 import com.agentevirtual.model.InformacionDeuda;
 import com.agentevirtual.repository.ClienteRepository;
 import com.agentevirtual.repository.InformacionDeudaRepository;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 //@RequiredArgsConstructor
 public class InformacionDeudaService {
-
-    private final SeguridadConfig seguridadConfig;
 
 	@Autowired
 	private InformacionDeudaRepository _informacionDeudaRepository;
@@ -32,21 +21,13 @@ public class InformacionDeudaService {
 	@Autowired
 	private ClienteRepository _clienteRepository;
 
-    InformacionDeudaService(SeguridadConfig seguridadConfig) {
-        this.seguridadConfig = seguridadConfig;
-    }
-
-	/*
-	 * @Autowired private ClienteRepository _clienteRepository;
-	 */
-
 	public InformacionDeuda registrarDeuda(InformacionDeuda deuda) {
 		deuda.setEsActivo(true);
 		return _informacionDeudaRepository.save(deuda);
 	}
 
 	public List<InformacionDeuda> listarDeudasPorCliente(int idCliente) {
-		return _informacionDeudaRepository.findByCliente_IdClienteAndEsActivoTrue(idCliente);
+		return _informacionDeudaRepository.findByCliente_IdCliente(idCliente);
 	}
 
 	public List<InformacionDeuda> listarDeudasPorIdentificacion(String identificacion) {
@@ -82,18 +63,17 @@ public class InformacionDeudaService {
 		return respInfoDeuda;
 	}
 
-	public boolean eliminarRegistroDeudaLogicamente(int id) {
-	    Optional<InformacionDeuda> deudaOpt = _informacionDeudaRepository.findById(id);
-	    if (deudaOpt.isPresent()) {
-	        InformacionDeuda deuda = deudaOpt.get();
-	        deuda.setEsActivo(false);
-	        _informacionDeudaRepository.save(deuda);
-	        return true;
-	    }
-	    return false;
-	}
-	
+	public Integer eliminarRegistroDeuda(int id) {
 
+		Integer respInfoDeuda = 0;
+		InformacionDeuda informacionDeuda = _informacionDeudaRepository.findById(id).orElse(null);
+
+		if (informacionDeuda != null) {
+			respInfoDeuda = informacionDeuda.getCliente().getIdCliente();
+			_informacionDeudaRepository.deleteById(id);
+		}
+		return respInfoDeuda;
+	}
 
 	public InformacionDeuda guardarDeuda(InformacionDeuda deuda) {
 
@@ -113,12 +93,11 @@ public class InformacionDeudaService {
 		respDeuda.setNumCuotaPagada(deuda.getNumCuotaPagada());
 		respDeuda.setProximaCuota(deuda.getNumCuotaPagada() + 1);
 
-		// ✅ Validar fechaDeuda antes de usar plusMonths
+		// Validar fechaDeuda antes de usar plusMonths
 		if (deuda.getFechaDeuda() != null) {
 			respDeuda.setFechaDeuda(deuda.getFechaDeuda());
 			respDeuda.setFechaMaxPago(deuda.getFechaDeuda().plusMonths(1));
 		} else {
-			// Puedes lanzar una excepción si es obligatorio o poner una fecha por defecto
 			LocalDateTime ahora = LocalDateTime.now();
 			respDeuda.setFechaDeuda(ahora);
 			respDeuda.setFechaMaxPago(ahora.plusMonths(1));
@@ -129,18 +108,4 @@ public class InformacionDeudaService {
 
 		return _informacionDeudaRepository.save(respDeuda);
 	}
-
-	/*
-	 * @Transactional(readOnly = true) public List<InformacionDeudaDTO>
-	 * listarDeudasDTOPorCliente(int idCliente) { return
-	 * _informacionDeudaRepository.buscarDeudasPorIdCliente(idCliente); }
-	 * 
-	 * @Transactional(readOnly = true) public List<InformacionDeudaDTO>
-	 * listarDeudasDTOPorIdentificacion(String identificacion) { return
-	 * _clienteRepository.findByIdentificacion(identificacion) .map(cliente ->
-	 * _informacionDeudaRepository.buscarDeudasPorIdCliente(cliente.getIdCliente()))
-	 * .orElseThrow(() -> new
-	 * RuntimeException("No se encontró un cliente con esa identificación")); }
-	 */
-
 }

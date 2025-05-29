@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.agentevirtual.model.Cliente;
 import com.agentevirtual.model.Rol;
 import com.agentevirtual.model.Usuario;
 import com.agentevirtual.service.UsuarioService;
@@ -30,11 +29,6 @@ public class UsuarioController {
 	public String login() {
 		return "login";
 	}
-
-	/*
-	 * @GetMapping("/registro") public String mostrarFormularioRegistro(Model model)
-	 * { model.addAttribute("usuario", new Usuario()); return "registro"; }
-	 */
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/guardar-usuario")
@@ -70,14 +64,26 @@ public class UsuarioController {
 	@GetMapping("/editar-usuario/{id}")
 	public String mostrarFormularioEditarUsuario(@PathVariable("id") Integer id, Model model) {
 		Usuario usuario = _usuarioService.obtenerUsuarioPorId(id);
+
+		Rol rolActual = usuario.getRol();
+		if (rolActual != null) {
+			usuario.setIdRolSeleccionado(rolActual.getIdRol());
+		}
+
+		List<Rol> listaRoles = _usuarioService.listarRoles();
+
 		model.addAttribute("usuarios", usuario);
-		model.addAttribute("accion", "/editarRegistroUsuario/" + id); // usado por th:action
+		model.addAttribute("listaRoles", listaRoles);
+		model.addAttribute("accion", "/editarRegistroUsuario/" + id);
 		return "registroUsuario";
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/editarRegistroUsuario/{id}")
-	public String actualizarRegistroCliente(@PathVariable("id") int id, @ModelAttribute Usuario usuario) {
+	public String actualizarRegistroUsuario(@PathVariable("id") int id, @ModelAttribute Usuario usuario) {
+		Rol rolSeleccionado = _usuarioService.obtenerRolPorId(usuario.getRol().getIdRol());
+		usuario.setRol(rolSeleccionado);
+
 		Usuario respUsuario = _usuarioService.actualizarRegistroUsuario(usuario);
 
 		if (respUsuario != null) {
