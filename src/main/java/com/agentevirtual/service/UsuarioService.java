@@ -88,7 +88,8 @@ public class UsuarioService {
 		String claveEncriptada = passwordEncoder.encode(nuevaClave);
 		usuario.setPassword(claveEncriptada);
 
-		guardarUsuario(usuario);
+		// guardarUsuario(usuario);
+		_usuarioRepository.save(usuario);
 
 		return "Contraseña reseteada correctamente a: " + nuevaClave;
 	}
