@@ -57,7 +57,7 @@
 										<th class="text-center">Correo</th>
 										<th class="text-center">Celular</th>
 										<th class="text-center">Estado</th>
-										<th class="text-center">Rol</th>
+										<!--<th class="text-center">Rol</th>-->
 										<th class="text-center">Resetear Password</th>
 										<th class="text-center">Actualizar</th>
 									</tr>
@@ -71,8 +71,8 @@
 										<td th:text="${usuario.identificacion}"></td>
 										<td th:text="${usuario.correo}"></td>
 										<td th:text="${usuario.celular}"></td>
-										<td th:text="${usuario.enabled}"></td>
-										<td>ADMIN</td>
+										<td th:text="${usuario.enabled} ? 'ACTIVO' : 'INACTIVO'"></td>
+										<!--<td>ADMIN</td>-->
 
 
 										<td><a th:href="@{/reset-password/{id}(id=${usuario.idUsuario})}"

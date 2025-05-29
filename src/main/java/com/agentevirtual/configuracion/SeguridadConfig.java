@@ -11,6 +11,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import com.agentevirtual.service.ServicioDetalleUsuario;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -19,6 +22,7 @@ public class SeguridadConfig {
 
 	@Autowired
 	private ServicioDetalleUsuario servicioDetalleUsuario;
+	private final ManejoError failureHandler;
 
 	@Bean
 	public DaoAuthenticationProvider proveedorAutenticacion() {
@@ -47,20 +51,34 @@ public class SeguridadConfig {
 	@Bean
 	@Order(2)
 	public SecurityFilterChain webSecurity(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(
-				auth -> auth.requestMatchers("/login", "/registro", "/css/**", "/js/**", "/assets/**", "/fonts/**")
-						.permitAll().requestMatchers("/admin/**").hasRole("ADMIN")
-						// .requestMatchers("/clientes/**").hasAnyRole("ADMIN", "GESTOR")
-						.anyRequest().authenticated())
-				.formLogin(form -> form.loginPage("/login").failureUrl("/login?error").defaultSuccessUrl("/home", true)
-						.permitAll())
-				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll());
+		http
+			.authenticationManager(authenticationManager()) // <-- añade esto
+			.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/login", "/registro", "/css/**", "/js/**", "/assets/**", "/fonts/**").permitAll()
+				.requestMatchers("/admin/**").hasRole("ADMIN")
+				.anyRequest().authenticated())
+			.formLogin(form -> form
+				.loginPage("/login")
+				.failureHandler(failureHandler)
+				//.failureUrl("/login?error") // este puede ser opcional si usas failureHandler
+				.defaultSuccessUrl("/home", true)
+				.permitAll())
+			.logout(logout -> logout
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/login?logout")
+				.permitAll());
+
 		return http.build();
 	}
 
 	@Bean
 	public BCryptPasswordEncoder codificadorPassword() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public AuthenticationManager authenticationManager() {
+		return new ProviderManager(proveedorAutenticacion());
 	}
 
 }
